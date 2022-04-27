@@ -42,9 +42,9 @@ class SpringBootBanner implements Banner {
 	@Override
 	public void printBanner(Environment environment, Class<?> sourceClass, PrintStream printStream) {
 		for (String line : BANNER) {
-			printStream.println(line);
+			printStream.println(line); // 打印Spring的Banner
 		}
-		String version = SpringBootVersion.getVersion();
+		String version = SpringBootVersion.getVersion(); // 获取SpringBoot版本号
 		version = (version != null) ? " (v" + version + ")" : "";
 		StringBuilder padding = new StringBuilder();
 		while (padding.length() < STRAP_LINE_SIZE - (version.length() + SPRING_BOOT.length())) {
@@ -52,7 +52,7 @@ class SpringBootBanner implements Banner {
 		}
 
 		printStream.println(AnsiOutput.toString(AnsiColor.GREEN, SPRING_BOOT, AnsiColor.DEFAULT, padding.toString(),
-				AnsiStyle.FAINT, version));
+				AnsiStyle.FAINT, version)); // 打印Spring Boot及版本号
 		printStream.println();
 	}
 

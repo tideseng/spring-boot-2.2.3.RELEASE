@@ -56,7 +56,7 @@ class SpringApplicationBannerPrinter {
 	}
 
 	Banner print(Environment environment, Class<?> sourceClass, Log logger) {
-		Banner banner = getBanner(environment);
+		Banner banner = getBanner(environment); // 获取Banner
 		try {
 			logger.info(createStringFromBanner(banner, environment, sourceClass));
 		}
@@ -76,13 +76,13 @@ class SpringApplicationBannerPrinter {
 		Banners banners = new Banners();
 		banners.addIfNotNull(getImageBanner(environment));
 		banners.addIfNotNull(getTextBanner(environment));
-		if (banners.hasAtLeastOneBanner()) {
+		if (banners.hasAtLeastOneBanner()) { // 至少有一个Banner
 			return banners;
 		}
 		if (this.fallbackBanner != null) {
 			return this.fallbackBanner;
 		}
-		return DEFAULT_BANNER;
+		return DEFAULT_BANNER; // 没有任何Banner时采用默认的SpringBootBanner
 	}
 
 	private Banner getTextBanner(Environment environment) {
