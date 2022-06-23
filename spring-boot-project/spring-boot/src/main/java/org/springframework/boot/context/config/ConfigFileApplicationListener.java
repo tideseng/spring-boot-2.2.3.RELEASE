@@ -102,12 +102,12 @@ import org.springframework.util.StringUtils;
  * @author Madhura Bhave
  * @since 1.0.0
  */
-public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered {
+public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered { // 完成Spring Boot配置文件的加载
 
 	private static final String DEFAULT_PROPERTIES = "defaultProperties";
 
 	// Note the order is from least to most specific (last one wins)
-	private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/config/,file:./,file:./config/";
+	private static final String DEFAULT_SEARCH_LOCATIONS = "classpath:/,classpath:/config/,file:./,file:./config/"; // 实际上是从后往前的顺序加载application.properties、application.yml文件，前面路径下的文件会覆盖后面路径的文件
 
 	private static final String DEFAULT_NAMES = "application";
 
@@ -240,7 +240,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 	 * (like a map merge).
 	 * @param locations the search locations
 	 */
-	public void setSearchLocations(String locations) {
+	public void setSearchLocations(String locations) { // 设置配置文件的查找路径
 		Assert.hasLength(locations, "Locations must not be empty");
 		this.searchLocations = locations;
 	}
@@ -658,7 +658,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 		private Set<String> asResolvedSet(String value, String fallback) {
 			List<String> list = Arrays.asList(StringUtils.trimArrayElements(StringUtils.commaDelimitedListToStringArray(
 					(value != null) ? this.environment.resolvePlaceholders(value) : fallback)));
-			Collections.reverse(list);
+			Collections.reverse(list); // 顺序反转
 			return new LinkedHashSet<>(list);
 		}
 
