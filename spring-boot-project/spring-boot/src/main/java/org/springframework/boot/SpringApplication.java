@@ -269,8 +269,8 @@ public class SpringApplication {
 		Assert.notNull(primarySources, "PrimarySources must not be null");
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		this.webApplicationType = WebApplicationType.deduceFromClasspath(); // 根据classpath推断WebApplicationType属性值，后续根据该值创建对象的ApplicationContext
-		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath中查找并加载所有可用的ApplicationContextInitializer启动器，后续进行初始化操作
-		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath中查找并加载所有可用的ApplicationListener监听器，后续进行事件监听
+		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath下的spring.factories中查找并加载org.springframework.context.ApplicationContextInitializer对应的可用的ApplicationContextInitializer启动器，后续进行初始化操作
+		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath下的spring.factories中查找并加载org.springframework.context.ApplicationListener对应的可用的ApplicationListener监听器，后续进行事件监听
 		this.mainApplicationClass = deduceMainApplicationClass(); // 推断并设置main方法的定义类
 	}
 
@@ -342,7 +342,7 @@ public class SpringApplication {
 		ConfigurableEnvironment environment = getOrCreateEnvironment(); // 获取或创建Environment--StandardServletEnvironment（Servlet容器时的环境）
 		configureEnvironment(environment, applicationArguments.getSourceArgs()); // 配置Environment，包括PropertySource和Profile
 		ConfigurationPropertySources.attach(environment);
-		listeners.environmentPrepared(environment); // 遍历调用SpringApplicationRunListener的environmentPrepared方法，通知Spring Boot应用的Environment环境准备完毕
+		listeners.environmentPrepared(environment); // 遍历调用SpringApplicationRunListener的environmentPrepared方法，发布ApplicationEnvironmentPreparedEvent事件，通知Spring Boot应用的Environment环境准备完毕
 		bindToSpringApplication(environment);
 		if (!this.isCustomEnvironment) {
 			environment = new EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,
