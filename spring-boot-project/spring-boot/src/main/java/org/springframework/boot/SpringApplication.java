@@ -449,16 +449,16 @@ public class SpringApplication {
 	}
 
 	private ConfigurableEnvironment getOrCreateEnvironment() {
-		if (this.environment != null) {
+		if (this.environment != null) { // 如果指定了Environment，则返回指定的Environment
 			return this.environment;
 		}
 		switch (this.webApplicationType) {
 		case SERVLET:
-			return new StandardServletEnvironment();
+			return new StandardServletEnvironment(); // Servlet的Environment实例对象
 		case REACTIVE:
 			return new StandardReactiveWebEnvironment();
 		default:
-			return new StandardEnvironment();
+			return new StandardEnvironment(); // 默认的Environment实例对象
 		}
 	}
 
@@ -1059,7 +1059,7 @@ public class SpringApplication {
 	 * context.
 	 * @param environment the environment
 	 */
-	public void setEnvironment(ConfigurableEnvironment environment) {
+	public void setEnvironment(ConfigurableEnvironment environment) { // 设置Environment
 		this.isCustomEnvironment = true;
 		this.environment = environment;
 	}
