@@ -49,9 +49,9 @@ class FilteredPropertySource extends PropertySource<PropertySource<?>> {
 	static void apply(ConfigurableEnvironment environment, String propertySourceName, Set<String> filteredProperties, // propertySourceName值为defaultProperties
 			Consumer<PropertySource<?>> operation) {
 		MutablePropertySources propertySources = environment.getPropertySources();
-		PropertySource<?> original = propertySources.get(propertySourceName);
+		PropertySource<?> original = propertySources.get(propertySourceName); // 获取Environment中已经设置的PropertySource
 		if (original == null) {
-			operation.accept(null);
+			operation.accept(null); // 函数式接口回调，详见ConfigFileApplicationListener.Loader#load()
 			return;
 		}
 		propertySources.replace(propertySourceName, new FilteredPropertySource(original, filteredProperties));

@@ -642,7 +642,7 @@ public class SpringApplication {
 	 * Called to log active profile information.
 	 * @param context the application context
 	 */
-	protected void logStartupProfileInfo(ConfigurableApplicationContext context) {
+	protected void logStartupProfileInfo(ConfigurableApplicationContext context) { // 打印Profile信息
 		Log log = getApplicationLog();
 		if (log.isInfoEnabled()) {
 			String[] activeProfiles = context.getEnvironment().getActiveProfiles();
