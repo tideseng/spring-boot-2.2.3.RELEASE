@@ -37,7 +37,7 @@ public class PropertySourcesPlaceholdersResolver implements PlaceholdersResolver
 
 	private final PropertyPlaceholderHelper helper;
 
-	public PropertySourcesPlaceholdersResolver(Environment environment) {
+	public PropertySourcesPlaceholdersResolver(Environment environment) { // 创建PropertySourcesPlaceholdersResolver对象
 		this(getSources(environment), null);
 	}
 

@@ -489,7 +489,7 @@ public class SpringApplication {
 	 * @param args arguments passed to the {@code run} method
 	 * @see #configureEnvironment(ConfigurableEnvironment, String[])
 	 */
-	protected void configurePropertySources(ConfigurableEnvironment environment, String[] args) {
+	protected void configurePropertySources(ConfigurableEnvironment environment, String[] args) { // 添加属性源
 		MutablePropertySources sources = environment.getPropertySources();
 		if (this.defaultProperties != null && !this.defaultProperties.isEmpty()) {
 			sources.addLast(new MapPropertySource("defaultProperties", this.defaultProperties));
@@ -505,7 +505,7 @@ public class SpringApplication {
 				sources.replace(name, composite);
 			}
 			else {
-				sources.addFirst(new SimpleCommandLinePropertySource(args));
+				sources.addFirst(new SimpleCommandLinePropertySource(args)); // 添加命令行属性来源到Environment中
 			}
 		}
 	}

@@ -51,7 +51,7 @@ import org.springframework.util.StringUtils;
  * @author Matt Benson
  * @since 1.0.0
  */
-public class RandomValuePropertySource extends PropertySource<Random> {
+public class RandomValuePropertySource extends PropertySource<Random> { // 随机值属性源
 
 	/**
 	 * Name of the random {@link PropertySource}.
