@@ -416,11 +416,11 @@ public class SpringApplication {
 				getSpringFactoriesInstances(SpringApplicationRunListener.class, types, this, args));
 	}
 
-	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type) {
+	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type) { // 根据SpringFactoriesLoader扩展点机制获取相关类并调用无参构造器创建实例
 		return getSpringFactoriesInstances(type, new Class<?>[] {});
 	}
 
-	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) {
+	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, Object... args) { // 根据SpringFactoriesLoader扩展点机制获取相关类并调用有参构造器创建实例
 		ClassLoader classLoader = getClassLoader();
 		// Use names and ensure unique to protect against duplicates
 		Set<String> names = new LinkedHashSet<>(SpringFactoriesLoader.loadFactoryNames(type, classLoader)); // 在META-INF/spring.factories中获取对象type的类
@@ -430,7 +430,7 @@ public class SpringApplication {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes,
+	private <T> List<T> createSpringFactoriesInstances(Class<T> type, Class<?>[] parameterTypes, // 通过反射创建实例
 			ClassLoader classLoader, Object[] args, Set<String> names) {
 		List<T> instances = new ArrayList<>(names.size());
 		for (String name : names) {
@@ -438,7 +438,7 @@ public class SpringApplication {
 				Class<?> instanceClass = ClassUtils.forName(name, classLoader);
 				Assert.isAssignable(type, instanceClass);
 				Constructor<?> constructor = instanceClass.getDeclaredConstructor(parameterTypes); // 获取构造方法
-				T instance = (T) BeanUtils.instantiateClass(constructor, args);
+				T instance = (T) BeanUtils.instantiateClass(constructor, args); // 创建实例
 				instances.add(instance);
 			}
 			catch (Throwable ex) {
