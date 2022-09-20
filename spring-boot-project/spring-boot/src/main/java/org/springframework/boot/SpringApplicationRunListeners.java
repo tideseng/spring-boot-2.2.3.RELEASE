@@ -31,19 +31,19 @@ import org.springframework.util.ReflectionUtils;
  *
  * @author Phillip Webb
  */
-class SpringApplicationRunListeners {
+class SpringApplicationRunListeners { // 组合对象，封装了SpringApplicationRunListener列表信息
 
 	private final Log log;
 
-	private final List<SpringApplicationRunListener> listeners;
+	private final List<SpringApplicationRunListener> listeners; // SpringApplicationRunListener运行监听器列表
 
-	SpringApplicationRunListeners(Log log, Collection<? extends SpringApplicationRunListener> listeners) {
+	SpringApplicationRunListeners(Log log, Collection<? extends SpringApplicationRunListener> listeners) { // 初始化SpringApplicationRunListeners
 		this.log = log;
 		this.listeners = new ArrayList<>(listeners);
 	}
 
 	void starting() {
-		for (SpringApplicationRunListener listener : this.listeners) {
+		for (SpringApplicationRunListener listener : this.listeners) { // 循环迭代执行
 			listener.starting();
 		}
 	}

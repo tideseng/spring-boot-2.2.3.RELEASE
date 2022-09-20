@@ -33,13 +33,13 @@ import org.springframework.core.io.support.SpringFactoriesLoader;
  * @author Andy Wilkinson
  * @since 1.0.0
  */
-public interface SpringApplicationRunListener {
+public interface SpringApplicationRunListener { // 运行监听器，定义监听运行状态的相关方法
 
 	/**
 	 * Called immediately when the run method has first started. Can be used for very
 	 * early initialization.
 	 */
-	default void starting() {
+	default void starting() { // Spring应用刚启动
 	}
 
 	/**
@@ -47,7 +47,7 @@ public interface SpringApplicationRunListener {
 	 * {@link ApplicationContext} has been created.
 	 * @param environment the environment
 	 */
-	default void environmentPrepared(ConfigurableEnvironment environment) {
+	default void environmentPrepared(ConfigurableEnvironment environment) { // ConfigurableEnvironment准备完毕，允许将其调整
 	}
 
 	/**
@@ -55,7 +55,7 @@ public interface SpringApplicationRunListener {
 	 * before sources have been loaded.
 	 * @param context the application context
 	 */
-	default void contextPrepared(ConfigurableApplicationContext context) {
+	default void contextPrepared(ConfigurableApplicationContext context) { // ConfigurableApplicationContext准备完毕，允许将其调整
 	}
 
 	/**
@@ -63,7 +63,7 @@ public interface SpringApplicationRunListener {
 	 * refreshed.
 	 * @param context the application context
 	 */
-	default void contextLoaded(ConfigurableApplicationContext context) {
+	default void contextLoaded(ConfigurableApplicationContext context) { // ConfigurableApplicationContext已装载，但还未启动
 	}
 
 	/**
@@ -73,7 +73,7 @@ public interface SpringApplicationRunListener {
 	 * @param context the application context.
 	 * @since 2.0.0
 	 */
-	default void started(ConfigurableApplicationContext context) {
+	default void started(ConfigurableApplicationContext context) { // ConfigurableApplicationContext已启动，此时Spring Bean已初始化完成
 	}
 
 	/**
@@ -83,7 +83,7 @@ public interface SpringApplicationRunListener {
 	 * @param context the application context.
 	 * @since 2.0.0
 	 */
-	default void running(ConfigurableApplicationContext context) {
+	default void running(ConfigurableApplicationContext context) { // Spring应用正在运行
 	}
 
 	/**
@@ -93,7 +93,7 @@ public interface SpringApplicationRunListener {
 	 * @param exception the failure
 	 * @since 2.0.0
 	 */
-	default void failed(ConfigurableApplicationContext context, Throwable exception) {
+	default void failed(ConfigurableApplicationContext context, Throwable exception) { // Spring应用运行失败
 	}
 
 }
