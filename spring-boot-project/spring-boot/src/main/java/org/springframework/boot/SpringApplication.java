@@ -270,7 +270,7 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources)); // 设置传入的Bean来源
 		this.webApplicationType = WebApplicationType.deduceFromClasspath(); // 推断Web应用类型，根据classpath推断WebApplicationType属性值，后续根据该值创建对象的ApplicationContext
 		setInitializers((Collection) getSpringFactoriesInstances(ApplicationContextInitializer.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath下的spring.factories中查找并加载org.springframework.context.ApplicationContextInitializer对应的可用的ApplicationContextInitializer启动器，后续进行初始化操作
-		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath下的spring.factories中查找并加载org.springframework.context.ApplicationListener对应的可用的ApplicationListener监听器，后续进行事件监听，如BootstrapApplicationListener
+		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class)); // 通过SpringFactoriesLoader扩展点机制在应用的classpath下的spring.factories中查找并加载org.springframework.context.ApplicationListener对应的可用的ApplicationListener监听器，后续进行事件监听，如BootstrapApplicationListener、ConfigFileApplicationListener
 		this.mainApplicationClass = deduceMainApplicationClass(); // 推断主引导类
 	}
 
@@ -340,7 +340,7 @@ public class SpringApplication {
 			ApplicationArguments applicationArguments) {
 		// Create and configure the environment
 		ConfigurableEnvironment environment = getOrCreateEnvironment(); // 获取或创建Environment--StandardServletEnvironment（Servlet容器时的环境）
-		configureEnvironment(environment, applicationArguments.getSourceArgs()); // 配置Environment，包括PropertySource和Profile
+		configureEnvironment(environment, applicationArguments.getSourceArgs()); // 配置Environment，包括转换器、PropertySource和Profile
 		ConfigurationPropertySources.attach(environment);
 		listeners.environmentPrepared(environment); // 遍历调用SpringApplicationRunListener的environmentPrepared方法，发布ApplicationEnvironmentPreparedEvent事件，通知Spring Boot应用的Environment环境准备完毕（BootstrapApplicationListener、ConfigFileApplicationListener处理入口）
 		bindToSpringApplication(environment);
@@ -473,10 +473,10 @@ public class SpringApplication {
 	 * @see #configureProfiles(ConfigurableEnvironment, String[])
 	 * @see #configurePropertySources(ConfigurableEnvironment, String[])
 	 */
-	protected void configureEnvironment(ConfigurableEnvironment environment, String[] args) {
-		if (this.addConversionService) {
-			ConversionService conversionService = ApplicationConversionService.getSharedInstance();
-			environment.setConversionService((ConfigurableConversionService) conversionService);
+	protected void configureEnvironment(ConfigurableEnvironment environment, String[] args) { // 配置Environment，包括转换器、PropertySource和Profile
+		if (this.addConversionService) { // 默认为true
+			ConversionService conversionService = ApplicationConversionService.getSharedInstance(); // 获取ConversionService
+			environment.setConversionService((ConfigurableConversionService) conversionService); // 加载ConversionService
 		}
 		configurePropertySources(environment, args); // 加载PropertySource
 		configureProfiles(environment, args); // 加载Profile
