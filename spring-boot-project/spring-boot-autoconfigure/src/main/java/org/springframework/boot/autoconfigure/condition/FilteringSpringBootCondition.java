@@ -44,7 +44,7 @@ abstract class FilteringSpringBootCondition extends SpringBootCondition
 	private ClassLoader beanClassLoader;
 
 	@Override
-	public boolean[] match(String[] autoConfigurationClasses, AutoConfigurationMetadata autoConfigurationMetadata) {
+	public boolean[] match(String[] autoConfigurationClasses, AutoConfigurationMetadata autoConfigurationMetadata) { // 根据当前AutoConfigurationImportFilter实例获取是否匹配数组
 		ConditionEvaluationReport report = ConditionEvaluationReport.find(this.beanFactory);
 		ConditionOutcome[] outcomes = getOutcomes(autoConfigurationClasses, autoConfigurationMetadata);
 		boolean[] match = new boolean[outcomes.length];

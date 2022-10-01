@@ -86,7 +86,7 @@ class OnBeanCondition extends FilteringSpringBootCondition implements Configurat
 		for (int i = 0; i < outcomes.length; i++) {
 			String autoConfigurationClass = autoConfigurationClasses[i];
 			if (autoConfigurationClass != null) {
-				Set<String> onBeanTypes = autoConfigurationMetadata.getSet(autoConfigurationClass, "ConditionalOnBean");
+				Set<String> onBeanTypes = autoConfigurationMetadata.getSet(autoConfigurationClass, "ConditionalOnBean"); // 从spring-autoconfigure-metadata.properties文件中获取改自动配置类的ConditionalOnBean
 				outcomes[i] = getOutcome(onBeanTypes, ConditionalOnBean.class);
 				if (outcomes[i] == null) {
 					Set<String> onSingleCandidateTypes = autoConfigurationMetadata.getSet(autoConfigurationClass,

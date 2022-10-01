@@ -50,7 +50,7 @@ class OnClassCondition extends FilteringSpringBootCondition {
 		// processor is available. Using a single additional thread seems to offer the
 		// best performance. More threads make things worse.
 		if (Runtime.getRuntime().availableProcessors() > 1) {
-			return resolveOutcomesThreaded(autoConfigurationClasses, autoConfigurationMetadata);
+			return resolveOutcomesThreaded(autoConfigurationClasses, autoConfigurationMetadata); // 当剩余CPU核数大于1时，使用两个线程执行
 		}
 		else {
 			OutcomesResolver outcomesResolver = new StandardOutcomesResolver(autoConfigurationClasses, 0,
@@ -62,24 +62,24 @@ class OnClassCondition extends FilteringSpringBootCondition {
 	private ConditionOutcome[] resolveOutcomesThreaded(String[] autoConfigurationClasses,
 			AutoConfigurationMetadata autoConfigurationMetadata) {
 		int split = autoConfigurationClasses.length / 2;
-		OutcomesResolver firstHalfResolver = createOutcomesResolver(autoConfigurationClasses, 0, split,
+		OutcomesResolver firstHalfResolver = createOutcomesResolver(autoConfigurationClasses, 0, split, // 开启一个线程异步调用OnClassCondition.OutcomesResolver.resolveOutcomes方法
 				autoConfigurationMetadata);
 		OutcomesResolver secondHalfResolver = new StandardOutcomesResolver(autoConfigurationClasses, split,
 				autoConfigurationClasses.length, autoConfigurationMetadata, getBeanClassLoader());
-		ConditionOutcome[] secondHalf = secondHalfResolver.resolveOutcomes();
-		ConditionOutcome[] firstHalf = firstHalfResolver.resolveOutcomes();
+		ConditionOutcome[] secondHalf = secondHalfResolver.resolveOutcomes(); // 同步调用resolveOutcomes方法
+		ConditionOutcome[] firstHalf = firstHalfResolver.resolveOutcomes(); // 获取异步执行结果（会阻塞当前线程）
 		ConditionOutcome[] outcomes = new ConditionOutcome[autoConfigurationClasses.length];
 		System.arraycopy(firstHalf, 0, outcomes, 0, firstHalf.length);
 		System.arraycopy(secondHalf, 0, outcomes, split, secondHalf.length);
 		return outcomes;
 	}
 
-	private OutcomesResolver createOutcomesResolver(String[] autoConfigurationClasses, int start, int end,
+	private OutcomesResolver createOutcomesResolver(String[] autoConfigurationClasses, int start, int end, // 开启一个线程异步调用OnClassCondition.OutcomesResolver.resolveOutcomes方法
 			AutoConfigurationMetadata autoConfigurationMetadata) {
 		OutcomesResolver outcomesResolver = new StandardOutcomesResolver(autoConfigurationClasses, start, end,
 				autoConfigurationMetadata, getBeanClassLoader());
 		try {
-			return new ThreadedOutcomesResolver(outcomesResolver);
+			return new ThreadedOutcomesResolver(outcomesResolver); // 开启一个线程异步调用OnClassCondition.OutcomesResolver.resolveOutcomes方法
 		}
 		catch (AccessControlException ex) {
 			return outcomesResolver;
@@ -166,7 +166,7 @@ class OnClassCondition extends FilteringSpringBootCondition {
 
 	private final class StandardOutcomesResolver implements OutcomesResolver {
 
-		private final String[] autoConfigurationClasses;
+		private final String[] autoConfigurationClasses; // 自动配置类数组
 
 		private final int start;
 
@@ -186,17 +186,17 @@ class OnClassCondition extends FilteringSpringBootCondition {
 		}
 
 		@Override
-		public ConditionOutcome[] resolveOutcomes() {
-			return getOutcomes(this.autoConfigurationClasses, this.start, this.end, this.autoConfigurationMetadata);
+		public ConditionOutcome[] resolveOutcomes() { // 获取条件结果
+			return getOutcomes(this.autoConfigurationClasses, this.start, this.end, this.autoConfigurationMetadata); // 获取条件结果
 		}
 
-		private ConditionOutcome[] getOutcomes(String[] autoConfigurationClasses, int start, int end,
+		private ConditionOutcome[] getOutcomes(String[] autoConfigurationClasses, int start, int end, // 获取条件结果
 				AutoConfigurationMetadata autoConfigurationMetadata) {
 			ConditionOutcome[] outcomes = new ConditionOutcome[end - start];
 			for (int i = start; i < end; i++) {
-				String autoConfigurationClass = autoConfigurationClasses[i];
+				String autoConfigurationClass = autoConfigurationClasses[i]; // 获取当前自动配置类
 				if (autoConfigurationClass != null) {
-					String candidates = autoConfigurationMetadata.get(autoConfigurationClass, "ConditionalOnClass");
+					String candidates = autoConfigurationMetadata.get(autoConfigurationClass, "ConditionalOnClass"); // 从spring-autoconfigure-metadata.properties文件中获取改自动配置类的ConditionalOnClass
 					if (candidates != null) {
 						outcomes[i - start] = getOutcome(candidates);
 					}
