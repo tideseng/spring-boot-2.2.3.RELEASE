@@ -139,7 +139,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
 @AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
 		ValidationAutoConfiguration.class })
-public class WebMvcAutoConfiguration {
+public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spring-boot-autoconfigure包自动导入
 
 	public static final String DEFAULT_PREFIX = "";
 
@@ -174,7 +174,7 @@ public class WebMvcAutoConfiguration {
 	@Import(EnableWebMvcConfiguration.class)
 	@EnableConfigurationProperties({ WebMvcProperties.class, ResourceProperties.class })
 	@Order(0)
-	public static class WebMvcAutoConfigurationAdapter implements WebMvcConfigurer {
+	public static class WebMvcAutoConfigurationAdapter implements WebMvcConfigurer { // 默认的WebMvcConfigurer实现类
 
 		private static final Log logger = LogFactory.getLog(WebMvcConfigurer.class);
 
@@ -339,7 +339,7 @@ public class WebMvcAutoConfiguration {
 	 * Configuration equivalent to {@code @EnableWebMvc}.
 	 */
 	@Configuration(proxyBeanMethods = false)
-	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware {
+	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware { // 等价于@EnableWebMvc
 
 		private final ResourceProperties resourceProperties;
 

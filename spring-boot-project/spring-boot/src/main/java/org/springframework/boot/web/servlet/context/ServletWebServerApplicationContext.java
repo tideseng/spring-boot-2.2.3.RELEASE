@@ -136,9 +136,9 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	}
 
 	@Override
-	public final void refresh() throws BeansException, IllegalStateException {
+	public final void refresh() throws BeansException, IllegalStateException { // 初始化SpringMVC容器
 		try {
-			super.refresh();
+			super.refresh(); // 调用父类初始化SpringMVC容器
 		}
 		catch (RuntimeException ex) {
 			stopAndReleaseWebServer();

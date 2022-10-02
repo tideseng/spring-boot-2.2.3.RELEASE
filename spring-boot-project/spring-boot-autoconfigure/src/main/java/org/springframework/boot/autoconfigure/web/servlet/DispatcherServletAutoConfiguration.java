@@ -65,10 +65,10 @@ import org.springframework.web.servlet.DispatcherServlet;
  */
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE)
 @Configuration(proxyBeanMethods = false)
-@ConditionalOnWebApplication(type = Type.SERVLET)
+@ConditionalOnWebApplication(type = Type.SERVLET) // 当应用类型为Servlet应用时
 @ConditionalOnClass(DispatcherServlet.class)
 @AutoConfigureAfter(ServletWebServerFactoryAutoConfiguration.class)
-public class DispatcherServletAutoConfiguration {
+public class DispatcherServletAutoConfiguration { // DispatcherServlet自动配置类，由spring-boot-autoconfigure包自动导入
 
 	/*
 	 * The bean name for a DispatcherServlet that will be mapped to the root URL "/"
@@ -87,9 +87,9 @@ public class DispatcherServletAutoConfiguration {
 	protected static class DispatcherServletConfiguration {
 
 		@Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
-		public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties) {
-			DispatcherServlet dispatcherServlet = new DispatcherServlet();
-			dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest());
+		public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties) { // 创建DispatcherServlet，并注入属性对象设置外部化配置属性值
+			DispatcherServlet dispatcherServlet = new DispatcherServlet(); // 创建DispatcherServlet
+			dispatcherServlet.setDispatchOptionsRequest(webMvcProperties.isDispatchOptionsRequest()); // 设置外部化配置属性值
 			dispatcherServlet.setDispatchTraceRequest(webMvcProperties.isDispatchTraceRequest());
 			dispatcherServlet.setThrowExceptionIfNoHandlerFound(webMvcProperties.isThrowExceptionIfNoHandlerFound());
 			dispatcherServlet.setPublishEvents(webMvcProperties.isPublishRequestHandledEvents());
