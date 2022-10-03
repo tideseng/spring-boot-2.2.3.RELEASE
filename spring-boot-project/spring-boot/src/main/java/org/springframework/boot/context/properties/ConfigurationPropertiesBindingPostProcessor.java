@@ -92,19 +92,19 @@ public class ConfigurationPropertiesBindingPostProcessor
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		bind(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName));
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException { // 初始化前置操作
+		bind(ConfigurationPropertiesBean.get(this.applicationContext, bean, beanName)); // 先获取ConfigurationPropertiesBean对象，再进行绑定
 		return bean;
 	}
 
-	private void bind(ConfigurationPropertiesBean bean) {
+	private void bind(ConfigurationPropertiesBean bean) { // 数据绑定
 		if (bean == null || hasBoundValueObject(bean.getName())) {
 			return;
 		}
 		Assert.state(bean.getBindMethod() == BindMethod.JAVA_BEAN, "Cannot bind @ConfigurationProperties for bean '"
 				+ bean.getName() + "'. Ensure that @ConstructorBinding has not been applied to regular bean");
 		try {
-			this.binder.bind(bean);
+			this.binder.bind(bean); // 数据绑定，通过相应的转换器类型进行数据绑定
 		}
 		catch (Exception ex) {
 			throw new ConfigurationPropertiesBindException(bean, ex);

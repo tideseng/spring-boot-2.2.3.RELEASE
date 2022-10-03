@@ -102,7 +102,7 @@ import org.springframework.util.StringUtils;
  * @author Madhura Bhave
  * @since 1.0.0
  */
-public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered { // 通过事件通知完成Spring Boot配置文件的加载（事件监听器在SpringApplication初始化中进行加载）
+public class ConfigFileApplicationListener implements EnvironmentPostProcessor, SmartApplicationListener, Ordered { // 通过事件通知完成Spring Boot配置文件的加载（实现了ApplicationListener事件监听器接口，事件监听器在SpringApplication初始化中进行加载）
 
 	private static final String DEFAULT_PROPERTIES = "defaultProperties";
 
@@ -278,9 +278,9 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 		}
 
 		private void reorderSources(ConfigurableEnvironment environment) {
-			PropertySource<?> defaultProperties = environment.getPropertySources().remove(DEFAULT_PROPERTIES);
+			PropertySource<?> defaultProperties = environment.getPropertySources().remove(DEFAULT_PROPERTIES); // 移除defaultProperties属性源
 			if (defaultProperties != null) {
-				environment.getPropertySources().addLast(defaultProperties);
+				environment.getPropertySources().addLast(defaultProperties); // 将defaultProperties属性源到调整到队尾
 			}
 		}
 
@@ -432,7 +432,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 				}
 				MutablePropertySources merged = this.loaded.computeIfAbsent(profile,
 						(k) -> new MutablePropertySources());
-				addMethod.accept(merged, document.getPropertySource()); // 又是一个函数式接口
+				addMethod.accept(merged, document.getPropertySource()); // 又是一个函数式接口（添加属性源到队尾）
 			};
 		}
 
@@ -514,7 +514,7 @@ public class ConfigFileApplicationListener implements EnvironmentPostProcessor, 
 					}
 					return;
 				}
-				String name = "applicationConfig: [" + location + "]";
+				String name = "applicationConfig: [" + location + "]"; // 属性源的名称
 				List<Document> documents = loadDocuments(loader, name, resource); // 读取配置文件内容并将其封装到Document类中，包含PropertySource对象、profiles、activeProfiles、includeProfiles
 				if (CollectionUtils.isEmpty(documents)) { // 当documents为空时直接返回
 					if (this.logger.isTraceEnabled()) {

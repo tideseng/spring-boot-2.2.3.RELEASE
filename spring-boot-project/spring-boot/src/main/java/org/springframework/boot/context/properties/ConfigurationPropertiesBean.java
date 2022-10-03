@@ -59,17 +59,17 @@ import org.springframework.validation.annotation.Validated;
  */
 public final class ConfigurationPropertiesBean {
 
-	private final String name;
+	private final String name; // beanName
 
-	private final Object instance;
+	private final Object instance; // bean实例
 
-	private final ConfigurationProperties annotation;
+	private final ConfigurationProperties annotation; // 类上或方法上的@ConfigurationProperties注解
 
 	private final Bindable<?> bindTarget;
 
 	private final BindMethod bindMethod;
 
-	private ConfigurationPropertiesBean(String name, Object instance, ConfigurationProperties annotation,
+	private ConfigurationPropertiesBean(String name, Object instance, ConfigurationProperties annotation, // 初始化ConfigurationPropertiesBean
 			Bindable<?> bindTarget) {
 		this.name = name;
 		this.instance = instance;
@@ -196,37 +196,37 @@ public final class ConfigurationPropertiesBean {
 	 * factory method are annotated with
 	 * {@link ConfigurationProperties @ConfigurationProperties}
 	 */
-	public static ConfigurationPropertiesBean get(ApplicationContext applicationContext, Object bean, String beanName) {
-		Method factoryMethod = findFactoryMethod(applicationContext, beanName);
-		return create(beanName, bean, bean.getClass(), factoryMethod);
+	public static ConfigurationPropertiesBean get(ApplicationContext applicationContext, Object bean, String beanName) { // 获取ConfigurationPropertiesBean对象
+		Method factoryMethod = findFactoryMethod(applicationContext, beanName); // 获取该beanName对应的factoryMethod方法对象
+		return create(beanName, bean, bean.getClass(), factoryMethod); // 创建ConfigurationPropertiesBean对象
 	}
 
-	private static Method findFactoryMethod(ApplicationContext applicationContext, String beanName) {
+	private static Method findFactoryMethod(ApplicationContext applicationContext, String beanName) { // 获取该beanName对应的factoryMethod方法对象
 		if (applicationContext instanceof ConfigurableApplicationContext) {
-			return findFactoryMethod((ConfigurableApplicationContext) applicationContext, beanName);
+			return findFactoryMethod((ConfigurableApplicationContext) applicationContext, beanName); // 获取该beanName对应的factoryMethod方法对象
 		}
 		return null;
 	}
 
-	private static Method findFactoryMethod(ConfigurableApplicationContext applicationContext, String beanName) {
-		return findFactoryMethod(applicationContext.getBeanFactory(), beanName);
+	private static Method findFactoryMethod(ConfigurableApplicationContext applicationContext, String beanName) { // 获取该beanName对应的factoryMethod方法对象
+		return findFactoryMethod(applicationContext.getBeanFactory(), beanName); // 获取该beanName对应的factoryMethod方法对象
 	}
 
-	private static Method findFactoryMethod(ConfigurableListableBeanFactory beanFactory, String beanName) {
+	private static Method findFactoryMethod(ConfigurableListableBeanFactory beanFactory, String beanName) { // 获取该beanName对应的factoryMethod方法对象
 		if (beanFactory.containsBeanDefinition(beanName)) {
 			BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
 			if (beanDefinition instanceof RootBeanDefinition) {
-				Method resolvedFactoryMethod = ((RootBeanDefinition) beanDefinition).getResolvedFactoryMethod();
+				Method resolvedFactoryMethod = ((RootBeanDefinition) beanDefinition).getResolvedFactoryMethod(); // 获取factoryMethod对应的Method对象
 				if (resolvedFactoryMethod != null) {
 					return resolvedFactoryMethod;
 				}
 			}
-			return findFactoryMethodUsingReflection(beanFactory, beanDefinition);
+			return findFactoryMethodUsingReflection(beanFactory, beanDefinition); // 通过反射获取factoryMethod对应的Method对象
 		}
 		return null;
 	}
 
-	private static Method findFactoryMethodUsingReflection(ConfigurableListableBeanFactory beanFactory,
+	private static Method findFactoryMethodUsingReflection(ConfigurableListableBeanFactory beanFactory, // 通过反射获取factoryMethod对应的Method对象
 			BeanDefinition beanDefinition) {
 		String factoryMethodName = beanDefinition.getFactoryMethodName();
 		String factoryBeanName = beanDefinition.getFactoryBeanName();
@@ -253,12 +253,12 @@ public final class ConfigurationPropertiesBean {
 		return propertiesBean;
 	}
 
-	private static ConfigurationPropertiesBean create(String name, Object instance, Class<?> type, Method factory) {
-		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class);
+	private static ConfigurationPropertiesBean create(String name, Object instance, Class<?> type, Method factory) { // 创建ConfigurationPropertiesBean对象
+		ConfigurationProperties annotation = findAnnotation(instance, type, factory, ConfigurationProperties.class); // 获取类上或方法上的@ConfigurationProperties注解
 		if (annotation == null) {
 			return null;
 		}
-		Validated validated = findAnnotation(instance, type, factory, Validated.class);
+		Validated validated = findAnnotation(instance, type, factory, Validated.class); // 获取类上或方法上的@Validated注解
 		Annotation[] annotations = (validated != null) ? new Annotation[] { annotation, validated }
 				: new Annotation[] { annotation };
 		ResolvableType bindType = (factory != null) ? ResolvableType.forMethodReturnType(factory)
@@ -267,7 +267,7 @@ public final class ConfigurationPropertiesBean {
 		if (instance != null) {
 			bindTarget = bindTarget.withExistingValue(instance);
 		}
-		return new ConfigurationPropertiesBean(name, instance, annotation, bindTarget);
+		return new ConfigurationPropertiesBean(name, instance, annotation, bindTarget); // 创建ConfigurationPropertiesBean
 	}
 
 	private static <A extends Annotation> A findAnnotation(Object instance, Class<?> type, Method factory,
