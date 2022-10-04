@@ -40,7 +40,7 @@ public class PropertyPlaceholderAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean(search = SearchStrategy.CURRENT)
 	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
+		return new PropertySourcesPlaceholderConfigurer(); // 创建PropertySourcesPlaceholderConfigurer
 	}
 
 }
