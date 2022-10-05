@@ -84,7 +84,7 @@ public class DispatcherServletAutoConfiguration { // DispatcherServlet自动配�
 	@Conditional(DefaultDispatcherServletCondition.class)
 	@ConditionalOnClass(ServletRegistration.class)
 	@EnableConfigurationProperties({ HttpProperties.class, WebMvcProperties.class })
-	protected static class DispatcherServletConfiguration {
+	protected static class DispatcherServletConfiguration { // DispatcherServlet配置类
 
 		@Bean(name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 		public DispatcherServlet dispatcherServlet(HttpProperties httpProperties, WebMvcProperties webMvcProperties) { // 创建DispatcherServlet，并注入属性对象设置外部化配置属性值
@@ -112,15 +112,15 @@ public class DispatcherServletAutoConfiguration { // DispatcherServlet自动配�
 	@ConditionalOnClass(ServletRegistration.class)
 	@EnableConfigurationProperties(WebMvcProperties.class)
 	@Import(DispatcherServletConfiguration.class)
-	protected static class DispatcherServletRegistrationConfiguration {
+	protected static class DispatcherServletRegistrationConfiguration { // DispatcherServlet注册配置类
 
 		@Bean(name = DEFAULT_DISPATCHER_SERVLET_REGISTRATION_BEAN_NAME)
 		@ConditionalOnBean(value = DispatcherServlet.class, name = DEFAULT_DISPATCHER_SERVLET_BEAN_NAME)
 		public DispatcherServletRegistrationBean dispatcherServletRegistration(DispatcherServlet dispatcherServlet,
 				WebMvcProperties webMvcProperties, ObjectProvider<MultipartConfigElement> multipartConfig) {
-			DispatcherServletRegistrationBean registration = new DispatcherServletRegistrationBean(dispatcherServlet,
+			DispatcherServletRegistrationBean registration = new DispatcherServletRegistrationBean(dispatcherServlet, // 创建DispatcherServletRegistrationBean，该对象实现了ServletContextInitializer接口（类似于SpringMVC中的WebApplicationInitializer），容器启动时会进行回调
 					webMvcProperties.getServlet().getPath());
-			registration.setName(DEFAULT_DISPATCHER_SERVLET_BEAN_NAME);
+			registration.setName(DEFAULT_DISPATCHER_SERVLET_BEAN_NAME); // 注册Servlet
 			registration.setLoadOnStartup(webMvcProperties.getServlet().getLoadOnStartup());
 			multipartConfig.ifAvailable(registration::setMultipartConfig);
 			return registration;

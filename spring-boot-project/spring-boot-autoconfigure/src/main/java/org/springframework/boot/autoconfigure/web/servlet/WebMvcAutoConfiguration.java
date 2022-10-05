@@ -135,7 +135,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @ConditionalOnClass({ Servlet.class, DispatcherServlet.class, WebMvcConfigurer.class })
-@ConditionalOnMissingBean(WebMvcConfigurationSupport.class)
+@ConditionalOnMissingBean(WebMvcConfigurationSupport.class) // 不存在WebMvcConfigurationSupport实例时成立，即与@EnableWebMvc不能同时成立
 @AutoConfigureOrder(Ordered.HIGHEST_PRECEDENCE + 10)
 @AutoConfigureAfter({ DispatcherServletAutoConfiguration.class, TaskExecutionAutoConfiguration.class,
 		ValidationAutoConfiguration.class })
@@ -171,7 +171,7 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 	// Defined as a nested config to ensure WebMvcConfigurer is not read when not
 	// on the classpath
 	@Configuration(proxyBeanMethods = false)
-	@Import(EnableWebMvcConfiguration.class)
+	@Import(EnableWebMvcConfiguration.class) // 导入EnableWebMvcConfiguration类
 	@EnableConfigurationProperties({ WebMvcProperties.class, ResourceProperties.class })
 	@Order(0)
 	public static class WebMvcAutoConfigurationAdapter implements WebMvcConfigurer { // 默认的WebMvcConfigurer实现类
@@ -205,7 +205,7 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 		}
 
 		@Override
-		public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		public void configureAsyncSupport(AsyncSupportConfigurer configurer) { // 异步支持
 			if (this.beanFactory.containsBean(TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME)) {
 				Object taskExecutor = this.beanFactory
 						.getBean(TaskExecutionAutoConfiguration.APPLICATION_TASK_EXECUTOR_BEAN_NAME);
@@ -240,7 +240,7 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 
 		@Bean
 		@ConditionalOnMissingBean
-		public InternalResourceViewResolver defaultViewResolver() {
+		public InternalResourceViewResolver defaultViewResolver() { // 添加默认的支持配置的视图解析器
 			InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 			resolver.setPrefix(this.mvcProperties.getView().getPrefix());
 			resolver.setSuffix(this.mvcProperties.getView().getSuffix());
@@ -339,7 +339,7 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 	 * Configuration equivalent to {@code @EnableWebMvc}.
 	 */
 	@Configuration(proxyBeanMethods = false)
-	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware { // 等价于@EnableWebMvc
+	public static class EnableWebMvcConfiguration extends DelegatingWebMvcConfiguration implements ResourceLoaderAware { // 等价于@EnableWebMvc，并进行扩展
 
 		private final ResourceProperties resourceProperties;
 

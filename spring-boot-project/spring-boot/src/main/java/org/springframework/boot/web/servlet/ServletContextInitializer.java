@@ -41,7 +41,7 @@ import org.springframework.web.WebApplicationInitializer;
  * @see WebApplicationInitializer
  */
 @FunctionalInterface
-public interface ServletContextInitializer {
+public interface ServletContextInitializer { // 功能类似于SpringMVC中的WebApplicationInitializer接口，容器启动时会进行回调
 
 	/**
 	 * Configure the given {@link ServletContext} with any servlets, filters, listeners
