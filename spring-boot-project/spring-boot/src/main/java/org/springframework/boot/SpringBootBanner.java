@@ -28,7 +28,7 @@ import org.springframework.core.env.Environment;
  *
  * @author Phillip Webb
  */
-class SpringBootBanner implements Banner {
+class SpringBootBanner implements Banner { // 默认的Banner
 
 	private static final String[] BANNER = { "", "  .   ____          _            __ _ _",
 			" /\\\\ / ___'_ __ _ _(_)_ __  __ _ \\ \\ \\ \\", "( ( )\\___ | '_ | '_| | '_ \\/ _` | \\ \\ \\ \\",

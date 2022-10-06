@@ -36,29 +36,29 @@ import org.springframework.util.StringUtils;
  */
 class SpringApplicationBannerPrinter {
 
-	static final String BANNER_LOCATION_PROPERTY = "spring.banner.location";
+	static final String BANNER_LOCATION_PROPERTY = "spring.banner.location"; // Banner文本地址属性key
 
-	static final String BANNER_IMAGE_LOCATION_PROPERTY = "spring.banner.image.location";
+	static final String BANNER_IMAGE_LOCATION_PROPERTY = "spring.banner.image.location"; // Banner图片地址属性key
 
-	static final String DEFAULT_BANNER_LOCATION = "banner.txt";
+	static final String DEFAULT_BANNER_LOCATION = "banner.txt"; // 默认的Banner文本地址属性value
 
 	static final String[] IMAGE_EXTENSION = { "gif", "jpg", "png" };
 
-	private static final Banner DEFAULT_BANNER = new SpringBootBanner();
+	private static final Banner DEFAULT_BANNER = new SpringBootBanner(); // 默认的Banner
 
 	private final ResourceLoader resourceLoader;
 
 	private final Banner fallbackBanner;
 
-	SpringApplicationBannerPrinter(ResourceLoader resourceLoader, Banner fallbackBanner) {
+	SpringApplicationBannerPrinter(ResourceLoader resourceLoader, Banner fallbackBanner) { // 初始化Banner打印器
 		this.resourceLoader = resourceLoader;
 		this.fallbackBanner = fallbackBanner;
 	}
 
-	Banner print(Environment environment, Class<?> sourceClass, Log logger) {
+	Banner print(Environment environment, Class<?> sourceClass, Log logger) { // 打印Beanner到日志
 		Banner banner = getBanner(environment); // 获取Banner
 		try {
-			logger.info(createStringFromBanner(banner, environment, sourceClass));
+			logger.info(createStringFromBanner(banner, environment, sourceClass)); // 打印Banner
 		}
 		catch (UnsupportedEncodingException ex) {
 			logger.warn("Failed to create String for banner", ex);
@@ -66,13 +66,13 @@ class SpringApplicationBannerPrinter {
 		return new PrintedBanner(banner, sourceClass);
 	}
 
-	Banner print(Environment environment, Class<?> sourceClass, PrintStream out) {
-		Banner banner = getBanner(environment);
-		banner.printBanner(environment, sourceClass, out);
+	Banner print(Environment environment, Class<?> sourceClass, PrintStream out) { // 打印Beanner到控制台
+		Banner banner = getBanner(environment); // 获取Banner
+		banner.printBanner(environment, sourceClass, out); // 打印Banner
 		return new PrintedBanner(banner, sourceClass);
 	}
 
-	private Banner getBanner(Environment environment) {
+	private Banner getBanner(Environment environment) { // 获取Banner
 		Banners banners = new Banners();
 		banners.addIfNotNull(getImageBanner(environment));
 		banners.addIfNotNull(getTextBanner(environment));
