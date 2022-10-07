@@ -201,7 +201,7 @@ public class SpringApplication {
 
 	private Class<?> mainApplicationClass; // 主引导类
 
-	private Banner.Mode bannerMode = Banner.Mode.CONSOLE;
+	private Banner.Mode bannerMode = Banner.Mode.CONSOLE; // 默认Banner的打印模式为控制台打印
 
 	private boolean logStartupInfo = true;
 
@@ -311,7 +311,7 @@ public class SpringApplication {
 			context = createApplicationContext(); // 5.创建应用上下文，根据webApplicationType创建ApplicationContext，Servlet容器是AnnotationConfigServletWebServerApplicationContext
 			exceptionReporters = getSpringFactoriesInstances(SpringBootExceptionReporter.class,
 					new Class[] { ConfigurableApplicationContext.class }, context);
-			prepareContext(context, environment, listeners, applicationArguments, printedBanner); // 6.准备上下文，调用应用上下文初始化器进行初始化、发布contextPrepared通知/ApplicationContextInitializedEvent、加载设置的配置资源，发布contextLoaded通知/ApplicationPreparedEvent事件
+			prepareContext(context, environment, listeners, applicationArguments, printedBanner); // 6.准备上下文，调用应用上下文初始化器进行初始化、发布contextPrepared通知/ApplicationContextInitializedEvent事件、加载设置的配置资源，发布contextLoaded通知/ApplicationPreparedEvent事件
 			refreshContext(context); // 7.刷新容器，调用Spring IOC容器的核心方法--refresh方法，会通知ConfigurationClassPostProcessor后置处理器解析配置类进入AutoConfigurationImportSelector进行自动装配、Bean的实例化等
 			afterRefresh(context, applicationArguments);
 			stopWatch.stop();
@@ -367,8 +367,8 @@ public class SpringApplication {
 			SpringApplicationRunListeners listeners, ApplicationArguments applicationArguments, Banner printedBanner) {
 		context.setEnvironment(environment); // 设置Environment
 		postProcessApplicationContext(context);
-		applyInitializers(context); // 调用上下文初始化器的初始化ApplicationContextInitializer.initialize方法（如通过AncestorInitializer设置Bootstrap父容器的入口）
-		listeners.contextPrepared(context); // 通知SpringBoot应用ApplicationContext准备完毕
+		applyInitializers(context); // 调用应用上下文初始化器的初始化initialize方法（如通过AncestorInitializer设置Bootstrap父容器的入口）
+		listeners.contextPrepared(context); // 发布contextPrepared通知/ApplicationContextInitializedEvent事件，通知SpringBoot应用ApplicationContext准备完毕
 		if (this.logStartupInfo) {
 			logStartupInfo(context.getParent() == null); // 打印启动信息
 			logStartupProfileInfo(context); // 打印Profile信息
@@ -377,7 +377,7 @@ public class SpringApplication {
 		ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
 		beanFactory.registerSingleton("springApplicationArguments", applicationArguments);
 		if (printedBanner != null) {
-			beanFactory.registerSingleton("springBootBanner", printedBanner);
+			beanFactory.registerSingleton("springBootBanner", printedBanner); // 注册Banner
 		}
 		if (beanFactory instanceof DefaultListableBeanFactory) {
 			((DefaultListableBeanFactory) beanFactory)
@@ -389,12 +389,12 @@ public class SpringApplication {
 		// Load the sources
 		Set<Object> sources = getAllSources(); // 获取设置的所有配置资源
 		Assert.notEmpty(sources, "Sources must not be empty");
-		load(context, sources.toArray(new Object[0])); // 加载传入的配置资源，生成BeanDefinition
-		listeners.contextLoaded(context); // 通知SpringBoot应用ApplicationContext填充完毕
+		load(context, sources.toArray(new Object[0])); // 加载传入的配置资源，生成BeanDefinition，并注册到BeanFactory中
+		listeners.contextLoaded(context); // 发布contextLoaded通知/ApplicationPreparedEvent事件，通知SpringBoot应用ApplicationContext填充完毕
 	}
 
-	private void refreshContext(ConfigurableApplicationContext context) {
-		refresh(context);
+	private void refreshContext(ConfigurableApplicationContext context) { // 刷新容器
+		refresh(context); // 刷新容器
 		if (this.registerShutdownHook) {
 			try {
 				context.registerShutdownHook();
@@ -545,17 +545,17 @@ public class SpringApplication {
 		}
 	}
 
-	private Banner printBanner(ConfigurableEnvironment environment) {
-		if (this.bannerMode == Banner.Mode.OFF) {
+	private Banner printBanner(ConfigurableEnvironment environment) { // 打印SpringBoot的Banner
+		if (this.bannerMode == Banner.Mode.OFF) { // 判断Banner的打印模式
 			return null;
 		}
 		ResourceLoader resourceLoader = (this.resourceLoader != null) ? this.resourceLoader
 				: new DefaultResourceLoader(getClassLoader());
-		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner);
+		SpringApplicationBannerPrinter bannerPrinter = new SpringApplicationBannerPrinter(resourceLoader, this.banner); // 创建Banner打印器
 		if (this.bannerMode == Mode.LOG) {
-			return bannerPrinter.print(environment, this.mainApplicationClass, logger);
+			return bannerPrinter.print(environment, this.mainApplicationClass, logger); // 打印Beanner到日志
 		}
-		return bannerPrinter.print(environment, this.mainApplicationClass, System.out);
+		return bannerPrinter.print(environment, this.mainApplicationClass, System.out); // 打印Beanner到控制台
 	}
 
 	/**
@@ -618,7 +618,7 @@ public class SpringApplication {
 	 * @see ConfigurableApplicationContext#refresh()
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	protected void applyInitializers(ConfigurableApplicationContext context) { // 调用上下文初始化器的初始化ApplicationContextInitializer.initialize方法
+	protected void applyInitializers(ConfigurableApplicationContext context) { // 调用应用上下文初始化器的初始化initialize方法
 		for (ApplicationContextInitializer initializer : getInitializers()) {
 			Class<?> requiredType = GenericTypeResolver.resolveTypeArgument(initializer.getClass(),
 					ApplicationContextInitializer.class);
@@ -688,7 +688,7 @@ public class SpringApplication {
 		if (this.environment != null) {
 			loader.setEnvironment(this.environment);
 		}
-		loader.load(); // 加载资源
+		loader.load(); // 加载资源，注册到BeanFactory中
 	}
 
 	/**
@@ -742,9 +742,9 @@ public class SpringApplication {
 	 * Refresh the underlying {@link ApplicationContext}.
 	 * @param applicationContext the application context to refresh
 	 */
-	protected void refresh(ApplicationContext applicationContext) {
+	protected void refresh(ApplicationContext applicationContext) { // 刷新容器
 		Assert.isInstanceOf(AbstractApplicationContext.class, applicationContext);
-		((AbstractApplicationContext) applicationContext).refresh();
+		((AbstractApplicationContext) applicationContext).refresh(); // 刷新容器
 	}
 
 	/**
