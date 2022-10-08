@@ -45,9 +45,9 @@ import org.springframework.util.ErrorHandler;
  */
 public class EventPublishingRunListener implements SpringApplicationRunListener, Ordered { // SpringApplicationRunListener接口的默认实现，对运行各阶段的方法发布相应的事件
 
-	private final SpringApplication application;
+	private final SpringApplication application; // SpringApplication对象
 
-	private final String[] args;
+	private final String[] args; // 指定传入的参数
 
 	private final SimpleApplicationEventMulticaster initialMulticaster; // 事件广播器
 
