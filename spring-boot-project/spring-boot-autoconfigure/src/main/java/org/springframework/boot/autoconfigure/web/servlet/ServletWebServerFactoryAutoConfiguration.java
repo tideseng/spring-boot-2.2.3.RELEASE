@@ -60,22 +60,22 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
 @ConditionalOnClass(ServletRequest.class)
 @ConditionalOnWebApplication(type = Type.SERVLET)
 @EnableConfigurationProperties(ServerProperties.class)
-@Import({ ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class,
-		ServletWebServerFactoryConfiguration.EmbeddedTomcat.class,
-		ServletWebServerFactoryConfiguration.EmbeddedJetty.class,
-		ServletWebServerFactoryConfiguration.EmbeddedUndertow.class })
+@Import({ ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar.class, // ImportBeanDefinitionRegistrar实现类，注册WebServerFactoryCustomizerBeanPostProcessor、ErrorPageRegistrarBeanPostProcessor
+		ServletWebServerFactoryConfiguration.EmbeddedTomcat.class, // 内嵌服务类Tomcat，定义Tomcat工厂
+		ServletWebServerFactoryConfiguration.EmbeddedJetty.class, // 内嵌服务类Jetty
+		ServletWebServerFactoryConfiguration.EmbeddedUndertow.class }) // 内嵌服务类Undertow
 public class ServletWebServerFactoryAutoConfiguration { // Servlet容器自动装配类
 
 	@Bean
 	public ServletWebServerFactoryCustomizer servletWebServerFactoryCustomizer(ServerProperties serverProperties) {
-		return new ServletWebServerFactoryCustomizer(serverProperties);
+		return new ServletWebServerFactoryCustomizer(serverProperties); // 创建ServletWebServerFactoryCustomizer（WebServerFactoryCustomizer实现类）
 	}
 
 	@Bean
 	@ConditionalOnClass(name = "org.apache.catalina.startup.Tomcat")
 	public TomcatServletWebServerFactoryCustomizer tomcatServletWebServerFactoryCustomizer(
 			ServerProperties serverProperties) {
-		return new TomcatServletWebServerFactoryCustomizer(serverProperties);
+		return new TomcatServletWebServerFactoryCustomizer(serverProperties); // 创建TomcatServletWebServerFactoryCustomizer（WebServerFactoryCustomizer实现类）
 	}
 
 	@Bean
@@ -93,7 +93,7 @@ public class ServletWebServerFactoryAutoConfiguration { // Servlet容器自动�
 	 * Registers a {@link WebServerFactoryCustomizerBeanPostProcessor}. Registered via
 	 * {@link ImportBeanDefinitionRegistrar} for early registration.
 	 */
-	public static class BeanPostProcessorsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactoryAware {
+	public static class BeanPostProcessorsRegistrar implements ImportBeanDefinitionRegistrar, BeanFactoryAware { // ImportBeanDefinitionRegistrar实现类，注册WebServerFactoryCustomizerBeanPostProcessor、ErrorPageRegistrarBeanPostProcessor
 
 		private ConfigurableListableBeanFactory beanFactory;
 
@@ -105,15 +105,15 @@ public class ServletWebServerFactoryAutoConfiguration { // Servlet容器自动�
 		}
 
 		@Override
-		public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata,
+		public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, // 注册WebServerFactoryCustomizerBeanPostProcessor、ErrorPageRegistrarBeanPostProcessor
 				BeanDefinitionRegistry registry) {
 			if (this.beanFactory == null) {
 				return;
 			}
 			registerSyntheticBeanIfMissing(registry, "webServerFactoryCustomizerBeanPostProcessor",
-					WebServerFactoryCustomizerBeanPostProcessor.class);
+					WebServerFactoryCustomizerBeanPostProcessor.class); // 注册WebServerFactoryCustomizerBeanPostProcessor（在初始化WebServerFactory之前，通过ServerProperties设置相关属性）
 			registerSyntheticBeanIfMissing(registry, "errorPageRegistrarBeanPostProcessor",
-					ErrorPageRegistrarBeanPostProcessor.class);
+					ErrorPageRegistrarBeanPostProcessor.class); // 注册ErrorPageRegistrarBeanPostProcessor
 		}
 
 		private void registerSyntheticBeanIfMissing(BeanDefinitionRegistry registry, String name, Class<?> beanClass) {

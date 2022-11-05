@@ -29,7 +29,7 @@ import org.springframework.web.servlet.DispatcherServlet;
  * @author Phillip Webb
  * @since 2.0.4
  */
-public class DispatcherServletRegistrationBean extends ServletRegistrationBean<DispatcherServlet>
+public class DispatcherServletRegistrationBean extends ServletRegistrationBean<DispatcherServlet> // DispatcherServlet注册类，该对象实现了ServletContextInitializer接口（类似于SpringMVC中的WebApplicationInitializer），容器启动时会进行回调
 		implements DispatcherServletPath {
 
 	private final String path;
@@ -40,7 +40,7 @@ public class DispatcherServletRegistrationBean extends ServletRegistrationBean<D
 	 * @param servlet the dispatcher servlet
 	 * @param path the dispatcher servlet path
 	 */
-	public DispatcherServletRegistrationBean(DispatcherServlet servlet, String path) {
+	public DispatcherServletRegistrationBean(DispatcherServlet servlet, String path) { // 实例化DispatcherServletRegistrationBean，传入DispatcherServlet、path
 		super(servlet);
 		Assert.notNull(path, "Path must not be null");
 		this.path = path;

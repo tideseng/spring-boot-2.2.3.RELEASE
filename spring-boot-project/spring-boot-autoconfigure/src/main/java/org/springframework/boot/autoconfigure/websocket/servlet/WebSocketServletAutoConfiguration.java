@@ -66,7 +66,7 @@ public class WebSocketServletAutoConfiguration {
 		@Bean
 		@ConditionalOnMissingBean(name = "websocketServletWebServerCustomizer")
 		TomcatWebSocketServletWebServerCustomizer websocketServletWebServerCustomizer() {
-			return new TomcatWebSocketServletWebServerCustomizer();
+			return new TomcatWebSocketServletWebServerCustomizer(); // 创建TomcatWebSocketServletWebServerCustomizer（WebServerFactoryCustomizer实现类）
 		}
 
 	}

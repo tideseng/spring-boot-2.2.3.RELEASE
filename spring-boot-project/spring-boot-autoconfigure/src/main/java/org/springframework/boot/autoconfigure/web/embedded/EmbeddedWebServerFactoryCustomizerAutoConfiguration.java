@@ -56,7 +56,7 @@ public class EmbeddedWebServerFactoryCustomizerAutoConfiguration {
 		@Bean
 		public TomcatWebServerFactoryCustomizer tomcatWebServerFactoryCustomizer(Environment environment,
 				ServerProperties serverProperties) {
-			return new TomcatWebServerFactoryCustomizer(environment, serverProperties);
+			return new TomcatWebServerFactoryCustomizer(environment, serverProperties); // 创建TomcatWebServerFactoryCustomizer（WebServerFactoryCustomizer实现类）
 		}
 
 	}

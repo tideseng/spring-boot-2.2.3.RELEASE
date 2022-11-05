@@ -60,19 +60,19 @@ import org.springframework.context.annotation.Configuration;
  * @author Sergey Serdyuk
  */
 @Configuration(proxyBeanMethods = false)
-class ServletWebServerFactoryConfiguration {
+class ServletWebServerFactoryConfiguration { // ServletWebServerFactory配置类
 
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass({ Servlet.class, Tomcat.class, UpgradeProtocol.class })
-	@ConditionalOnMissingBean(value = ServletWebServerFactory.class, search = SearchStrategy.CURRENT)
-	static class EmbeddedTomcat {
+	@ConditionalOnMissingBean(value = ServletWebServerFactory.class, search = SearchStrategy.CURRENT) // 条件是不存在ServletWebServerFactory实例
+	static class EmbeddedTomcat { // 内嵌服务类Tomcat，定义Tomcat工厂
 
 		@Bean
 		TomcatServletWebServerFactory tomcatServletWebServerFactory(
 				ObjectProvider<TomcatConnectorCustomizer> connectorCustomizers,
 				ObjectProvider<TomcatContextCustomizer> contextCustomizers,
 				ObjectProvider<TomcatProtocolHandlerCustomizer<?>> protocolHandlerCustomizers) {
-			TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
+			TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory(); // 创建TomcatServletWebServerFactory
 			factory.getTomcatConnectorCustomizers()
 					.addAll(connectorCustomizers.orderedStream().collect(Collectors.toList()));
 			factory.getTomcatContextCustomizers()

@@ -362,7 +362,7 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 
 		@Bean
 		@Override
-		public RequestMappingHandlerAdapter requestMappingHandlerAdapter(
+		public RequestMappingHandlerAdapter requestMappingHandlerAdapter( // 重写父类的方法
 				@Qualifier("mvcContentNegotiationManager") ContentNegotiationManager contentNegotiationManager,
 				@Qualifier("mvcConversionService") FormattingConversionService conversionService,
 				@Qualifier("mvcValidator") Validator validator) {
@@ -384,12 +384,12 @@ public class WebMvcAutoConfiguration { // @EnableWebMvc自动配置类，由spri
 		@Bean
 		@Primary
 		@Override
-		public RequestMappingHandlerMapping requestMappingHandlerMapping(
+		public RequestMappingHandlerMapping requestMappingHandlerMapping( // 重写父类的方法
 				@Qualifier("mvcContentNegotiationManager") ContentNegotiationManager contentNegotiationManager,
 				@Qualifier("mvcConversionService") FormattingConversionService conversionService,
 				@Qualifier("mvcResourceUrlProvider") ResourceUrlProvider resourceUrlProvider) {
 			// Must be @Primary for MvcUriComponentsBuilder to work
-			return super.requestMappingHandlerMapping(contentNegotiationManager, conversionService,
+			return super.requestMappingHandlerMapping(contentNegotiationManager, conversionService, // 直接调用父类方法
 					resourceUrlProvider);
 		}
 

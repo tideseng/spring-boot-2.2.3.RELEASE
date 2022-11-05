@@ -37,7 +37,7 @@ public class ServletWebServerFactoryCustomizer
 
 	private final ServerProperties serverProperties;
 
-	public ServletWebServerFactoryCustomizer(ServerProperties serverProperties) {
+	public ServletWebServerFactoryCustomizer(ServerProperties serverProperties) { // 实例化ServletWebServerFactoryCustomizer（WebServerFactoryCustomizer实现类）
 		this.serverProperties = serverProperties;
 	}
 
@@ -47,7 +47,7 @@ public class ServletWebServerFactoryCustomizer
 	}
 
 	@Override
-	public void customize(ConfigurableServletWebServerFactory factory) {
+	public void customize(ConfigurableServletWebServerFactory factory) { // 通过PropertyMapper将ServerProperties相关属性传递到Tomcat工厂属性中
 		PropertyMapper map = PropertyMapper.get().alwaysApplyingWhenNonNull();
 		map.from(this.serverProperties::getPort).to(factory::setPort);
 		map.from(this.serverProperties::getAddress).to(factory::setAddress);
