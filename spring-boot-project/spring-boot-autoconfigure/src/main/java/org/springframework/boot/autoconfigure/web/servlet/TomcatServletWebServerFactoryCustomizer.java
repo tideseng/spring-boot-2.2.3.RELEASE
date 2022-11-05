@@ -36,7 +36,7 @@ public class TomcatServletWebServerFactoryCustomizer
 
 	private final ServerProperties serverProperties;
 
-	public TomcatServletWebServerFactoryCustomizer(ServerProperties serverProperties) {
+	public TomcatServletWebServerFactoryCustomizer(ServerProperties serverProperties) { // 实例化TomcatServletWebServerFactoryCustomizer（WebServerFactoryCustomizer实现类）
 		this.serverProperties = serverProperties;
 	}
 
@@ -46,7 +46,7 @@ public class TomcatServletWebServerFactoryCustomizer
 	}
 
 	@Override
-	public void customize(TomcatServletWebServerFactory factory) {
+	public void customize(TomcatServletWebServerFactory factory) { // 将ServerProperties中Tomcat的相关属性设置到Tomcat工厂属性中
 		ServerProperties.Tomcat tomcatProperties = this.serverProperties.getTomcat();
 		if (!ObjectUtils.isEmpty(tomcatProperties.getAdditionalTldSkipPatterns())) {
 			factory.getTldSkipPatterns().addAll(tomcatProperties.getAdditionalTldSkipPatterns());

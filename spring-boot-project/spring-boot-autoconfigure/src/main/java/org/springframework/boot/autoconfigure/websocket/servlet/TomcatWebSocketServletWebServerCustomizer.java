@@ -30,12 +30,12 @@ import org.springframework.core.Ordered;
  * @author Andy Wilkinson
  * @since 2.0.0
  */
-public class TomcatWebSocketServletWebServerCustomizer
+public class TomcatWebSocketServletWebServerCustomizer // WebServerFactoryCustomizer实现类
 		implements WebServerFactoryCustomizer<TomcatServletWebServerFactory>, Ordered {
 
 	@Override
 	public void customize(TomcatServletWebServerFactory factory) {
-		factory.addContextCustomizers((context) -> context.addApplicationListener(WsContextListener.class.getName()));
+		factory.addContextCustomizers((context) -> context.addApplicationListener(WsContextListener.class.getName())); // 给上下文添加了一个WsContextListener监听器
 	}
 
 	@Override

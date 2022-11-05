@@ -64,7 +64,7 @@ public class TomcatWebServerFactoryCustomizer
 
 	private final ServerProperties serverProperties;
 
-	public TomcatWebServerFactoryCustomizer(Environment environment, ServerProperties serverProperties) {
+	public TomcatWebServerFactoryCustomizer(Environment environment, ServerProperties serverProperties) { // 实例化TomcatWebServerFactoryCustomizer
 		this.environment = environment;
 		this.serverProperties = serverProperties;
 	}
@@ -75,7 +75,7 @@ public class TomcatWebServerFactoryCustomizer
 	}
 
 	@Override
-	public void customize(ConfigurableTomcatWebServerFactory factory) {
+	public void customize(ConfigurableTomcatWebServerFactory factory) { // 通过PropertyMapper将ServerProperties中Tomcat的相关属性传递到Tomcat工厂属性中
 		ServerProperties properties = this.serverProperties;
 		ServerProperties.Tomcat tomcatProperties = properties.getTomcat();
 		PropertyMapper propertyMapper = PropertyMapper.get();
