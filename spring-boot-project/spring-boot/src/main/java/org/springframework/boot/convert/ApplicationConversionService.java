@@ -50,15 +50,15 @@ public class ApplicationConversionService extends FormattingConversionService {
 
 	private static volatile ApplicationConversionService sharedInstance;
 
-	public ApplicationConversionService() {
-		this(null);
+	public ApplicationConversionService() { // 初始化ApplicationConversionService
+		this(null); // 调用有参构造函数
 	}
 
 	public ApplicationConversionService(StringValueResolver embeddedValueResolver) {
 		if (embeddedValueResolver != null) {
 			setEmbeddedValueResolver(embeddedValueResolver);
 		}
-		configure(this);
+		configure(this); // 设置相关属性
 	}
 
 	/**
@@ -71,13 +71,13 @@ public class ApplicationConversionService extends FormattingConversionService {
 	 * @return the shared {@code ApplicationConversionService} instance (never
 	 * {@code null})
 	 */
-	public static ConversionService getSharedInstance() {
+	public static ConversionService getSharedInstance() { // 获取ConversionService
 		ApplicationConversionService sharedInstance = ApplicationConversionService.sharedInstance;
-		if (sharedInstance == null) {
+		if (sharedInstance == null) { // 双重检查锁机制
 			synchronized (ApplicationConversionService.class) {
 				sharedInstance = ApplicationConversionService.sharedInstance;
 				if (sharedInstance == null) {
-					sharedInstance = new ApplicationConversionService();
+					sharedInstance = new ApplicationConversionService(); // 创建ApplicationConversionService
 					ApplicationConversionService.sharedInstance = sharedInstance;
 				}
 			}
@@ -93,11 +93,11 @@ public class ApplicationConversionService extends FormattingConversionService {
 	 * @throws ClassCastException if the given FormatterRegistry could not be cast to a
 	 * ConversionService
 	 */
-	public static void configure(FormatterRegistry registry) {
-		DefaultConversionService.addDefaultConverters(registry);
-		DefaultFormattingConversionService.addDefaultFormatters(registry);
-		addApplicationFormatters(registry);
-		addApplicationConverters(registry);
+	public static void configure(FormatterRegistry registry) { // 设置相关属性
+		DefaultConversionService.addDefaultConverters(registry); // 添加Spring默认的转换器
+		DefaultFormattingConversionService.addDefaultFormatters(registry); // 添加Spring默认的格式化器
+		addApplicationFormatters(registry); // 添加SpringBoot应用的格式化器
+		addApplicationConverters(registry); // 添加SpringBoot应用的转换器
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class ApplicationConversionService extends FormattingConversionService {
 	 * @throws ClassCastException if the given ConverterRegistry could not be cast to a
 	 * ConversionService
 	 */
-	public static void addApplicationConverters(ConverterRegistry registry) {
+	public static void addApplicationConverters(ConverterRegistry registry) { // 添加SpringBoot应用的转换器
 		addDelimitedStringConverters(registry);
 		registry.addConverter(new StringToDurationConverter());
 		registry.addConverter(new DurationToStringConverter());
@@ -139,7 +139,7 @@ public class ApplicationConversionService extends FormattingConversionService {
 	 * Add formatters useful for most Spring Boot applications.
 	 * @param registry the service to register default formatters with
 	 */
-	public static void addApplicationFormatters(FormatterRegistry registry) {
+	public static void addApplicationFormatters(FormatterRegistry registry) { // 添加SpringBoot应用的格式化器
 		registry.addFormatter(new CharArrayFormatter());
 		registry.addFormatter(new InetAddressFormatter());
 		registry.addFormatter(new IsoOffsetFormatter());

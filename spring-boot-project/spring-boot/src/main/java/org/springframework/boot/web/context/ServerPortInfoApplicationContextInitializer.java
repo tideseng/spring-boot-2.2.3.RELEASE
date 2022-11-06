@@ -59,8 +59,8 @@ public class ServerPortInfoApplicationContextInitializer implements
 
 	@Override
 	public void onApplicationEvent(WebServerInitializedEvent event) {
-		String propertyName = "local." + getName(event.getApplicationContext()) + ".port";
-		setPortProperty(event.getApplicationContext(), propertyName, event.getWebServer().getPort());
+		String propertyName = "local." + getName(event.getApplicationContext()) + ".port"; // 指定属性源名称
+		setPortProperty(event.getApplicationContext(), propertyName, event.getWebServer().getPort()); // 添加服务端口属性源
 	}
 
 	private String getName(WebServerApplicationContext context) {

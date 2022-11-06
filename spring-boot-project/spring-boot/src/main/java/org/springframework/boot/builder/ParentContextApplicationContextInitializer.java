@@ -37,10 +37,10 @@ public class ParentContextApplicationContextInitializer
 
 	private int order = Ordered.HIGHEST_PRECEDENCE;
 
-	private final ApplicationContext parent;
+	private final ApplicationContext parent; // Bootstrap应用上下文
 
-	public ParentContextApplicationContextInitializer(ApplicationContext parent) {
-		this.parent = parent;
+	public ParentContextApplicationContextInitializer(ApplicationContext parent) { // 初始化ParentContextApplicationContextInitializer
+		this.parent = parent; // 注入Bootstrap应用上下文
 	}
 
 	public void setOrder(int order) {
@@ -55,7 +55,7 @@ public class ParentContextApplicationContextInitializer
 	@Override
 	public void initialize(ConfigurableApplicationContext applicationContext) {
 		if (applicationContext != this.parent) {
-			applicationContext.setParent(this.parent);
+			applicationContext.setParent(this.parent); // 设置Bootstrap父容器
 			applicationContext.addApplicationListener(EventPublisher.INSTANCE);
 		}
 	}

@@ -233,7 +233,7 @@ public class SpringApplication {
 
 	private Set<String> additionalProfiles = new HashSet<>();
 
-	private boolean allowBeanDefinitionOverriding;
+	private boolean allowBeanDefinitionOverriding; // 是否允许同名的BeanDefinition的覆盖，默认为false
 
 	private boolean isCustomEnvironment = false;
 
@@ -264,7 +264,7 @@ public class SpringApplication {
 	 * @see #setSources(Set)
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) { // 初始化SpringApplication（推断Web应用类型、主引导类，加载应用事件监听器、应用上下文初始化器）
+	public SpringApplication(ResourceLoader resourceLoader, Class<?>... primarySources) { // 初始化SpringApplication（推断Web应用类型、主引导类，加载应用上下文初始化器、应用事件监听器）
 		this.resourceLoader = resourceLoader;
 		Assert.notNull(primarySources, "PrimarySources must not be null");
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources)); // 设置传入的Bean来源
@@ -346,13 +346,13 @@ public class SpringApplication {
 		bindToSpringApplication(environment);
 		if (!this.isCustomEnvironment) {
 			environment = new EnvironmentConverter(getClassLoader()).convertEnvironmentIfNecessary(environment,
-					deduceEnvironmentClass());
+					deduceEnvironmentClass()); // 再次推断环境，如果不是这个类型则进行切换，防止被篡改
 		}
 		ConfigurationPropertySources.attach(environment);
 		return environment;
 	}
 
-	private Class<? extends StandardEnvironment> deduceEnvironmentClass() {
+	private Class<? extends StandardEnvironment> deduceEnvironmentClass() { // 推断环境
 		switch (this.webApplicationType) {
 		case SERVLET:
 			return StandardServletEnvironment.class;
@@ -365,10 +365,10 @@ public class SpringApplication {
 
 	private void prepareContext(ConfigurableApplicationContext context, ConfigurableEnvironment environment, // 准备上下文，发布ConfigurableApplicationContext事件
 			SpringApplicationRunListeners listeners, ApplicationArguments applicationArguments, Banner printedBanner) {
-		context.setEnvironment(environment); // 设置Environment
+		context.setEnvironment(environment); // 1.设置Environment
 		postProcessApplicationContext(context);
-		applyInitializers(context); // 调用应用上下文初始化器的初始化initialize方法（如通过AncestorInitializer设置Bootstrap父容器的入口）
-		listeners.contextPrepared(context); // 发布contextPrepared通知/ApplicationContextInitializedEvent事件，通知SpringBoot应用ApplicationContext准备完毕
+		applyInitializers(context); // 2.调用应用上下文初始化器的初始化initialize方法（如通过AncestorInitializer设置Bootstrap父容器的入口）
+		listeners.contextPrepared(context); // 3.发布contextPrepared通知/ApplicationContextInitializedEvent事件，通知SpringBoot应用ApplicationContext准备完毕
 		if (this.logStartupInfo) {
 			logStartupInfo(context.getParent() == null); // 打印启动信息
 			logStartupProfileInfo(context); // 打印Profile信息
@@ -381,7 +381,7 @@ public class SpringApplication {
 		}
 		if (beanFactory instanceof DefaultListableBeanFactory) {
 			((DefaultListableBeanFactory) beanFactory)
-					.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding);
+					.setAllowBeanDefinitionOverriding(this.allowBeanDefinitionOverriding); // 设置allowBeanDefinitionOverriding属性值（是否允许同名的BeanDefinition的覆盖，默认为false）
 		}
 		if (this.lazyInitialization) {
 			context.addBeanFactoryPostProcessor(new LazyInitializationBeanFactoryPostProcessor());
@@ -389,15 +389,15 @@ public class SpringApplication {
 		// Load the sources
 		Set<Object> sources = getAllSources(); // 获取设置的所有配置资源
 		Assert.notEmpty(sources, "Sources must not be empty");
-		load(context, sources.toArray(new Object[0])); // 加载传入的配置资源，生成BeanDefinition，并注册到BeanFactory中
-		listeners.contextLoaded(context); // 发布contextLoaded通知/ApplicationPreparedEvent事件，通知SpringBoot应用ApplicationContext填充完毕
+		load(context, sources.toArray(new Object[0])); // 4.加载传入的配置资源，生成BeanDefinition，并注册到BeanFactory中
+		listeners.contextLoaded(context); // 5.发布contextLoaded通知/ApplicationPreparedEvent事件，通知SpringBoot应用ApplicationContext填充完毕
 	}
 
 	private void refreshContext(ConfigurableApplicationContext context) { // 刷新容器
 		refresh(context); // 刷新容器
 		if (this.registerShutdownHook) {
 			try {
-				context.registerShutdownHook();
+				context.registerShutdownHook(); // 钩子方法，需要ConfigurableApplicationContext子类实现
 			}
 			catch (AccessControlException ex) {
 				// Not allowed in some environments.
@@ -476,7 +476,7 @@ public class SpringApplication {
 	protected void configureEnvironment(ConfigurableEnvironment environment, String[] args) { // 配置Environment，包括转换器、PropertySource和Profile
 		if (this.addConversionService) { // 默认为true
 			ConversionService conversionService = ApplicationConversionService.getSharedInstance(); // 获取ConversionService
-			environment.setConversionService((ConfigurableConversionService) conversionService); // 加载ConversionService
+			environment.setConversionService((ConfigurableConversionService) conversionService); // 配置ConversionService到环境的属性解析器中
 		}
 		configurePropertySources(environment, args); // 加载PropertySource
 		configureProfiles(environment, args); // 加载Profile
@@ -600,14 +600,14 @@ public class SpringApplication {
 		}
 		if (this.resourceLoader != null) {
 			if (context instanceof GenericApplicationContext) {
-				((GenericApplicationContext) context).setResourceLoader(this.resourceLoader);
+				((GenericApplicationContext) context).setResourceLoader(this.resourceLoader); // 设置资源加载器
 			}
 			if (context instanceof DefaultResourceLoader) {
-				((DefaultResourceLoader) context).setClassLoader(this.resourceLoader.getClassLoader());
+				((DefaultResourceLoader) context).setClassLoader(this.resourceLoader.getClassLoader()); // 设置类加载器
 			}
 		}
 		if (this.addConversionService) {
-			context.getBeanFactory().setConversionService(ApplicationConversionService.getSharedInstance());
+			context.getBeanFactory().setConversionService(ApplicationConversionService.getSharedInstance()); // 设置configureEnvironment方法中得到的ConversionService
 		}
 	}
 
@@ -755,22 +755,22 @@ public class SpringApplication {
 	protected void afterRefresh(ConfigurableApplicationContext context, ApplicationArguments args) {
 	}
 
-	private void callRunners(ApplicationContext context, ApplicationArguments args) {
+	private void callRunners(ApplicationContext context, ApplicationArguments args) { // runner调用（ApplicationRunner、CommandLineRunner的调用）
 		List<Object> runners = new ArrayList<>();
-		runners.addAll(context.getBeansOfType(ApplicationRunner.class).values());
-		runners.addAll(context.getBeansOfType(CommandLineRunner.class).values());
-		AnnotationAwareOrderComparator.sort(runners);
+		runners.addAll(context.getBeansOfType(ApplicationRunner.class).values()); // 获取ApplicationRunner类型的实例
+		runners.addAll(context.getBeansOfType(CommandLineRunner.class).values()); // 获取CommandLineRunner类型的实例
+		AnnotationAwareOrderComparator.sort(runners); // 排序
 		for (Object runner : new LinkedHashSet<>(runners)) {
 			if (runner instanceof ApplicationRunner) {
-				callRunner((ApplicationRunner) runner, args);
+				callRunner((ApplicationRunner) runner, args); // 调用ApplicationRunner
 			}
 			if (runner instanceof CommandLineRunner) {
-				callRunner((CommandLineRunner) runner, args);
+				callRunner((CommandLineRunner) runner, args); // 调用CommandLineRunner
 			}
 		}
 	}
 
-	private void callRunner(ApplicationRunner runner, ApplicationArguments args) {
+	private void callRunner(ApplicationRunner runner, ApplicationArguments args) { // 调用ApplicationRunner
 		try {
 			(runner).run(args);
 		}
@@ -779,7 +779,7 @@ public class SpringApplication {
 		}
 	}
 
-	private void callRunner(CommandLineRunner runner, ApplicationArguments args) {
+	private void callRunner(CommandLineRunner runner, ApplicationArguments args) { // 调用CommandLineRunner
 		try {
 			(runner).run(args.getSourceArgs());
 		}
@@ -938,7 +938,7 @@ public class SpringApplication {
 	 * @since 2.1.0
 	 * @see DefaultListableBeanFactory#setAllowBeanDefinitionOverriding(boolean)
 	 */
-	public void setAllowBeanDefinitionOverriding(boolean allowBeanDefinitionOverriding) {
+	public void setAllowBeanDefinitionOverriding(boolean allowBeanDefinitionOverriding) { // 设置是否允许同名的BeanDefinition的覆盖
 		this.allowBeanDefinitionOverriding = allowBeanDefinitionOverriding;
 	}
 
