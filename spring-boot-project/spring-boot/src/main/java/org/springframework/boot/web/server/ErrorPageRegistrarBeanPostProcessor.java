@@ -51,9 +51,9 @@ public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, B
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof ErrorPageRegistry) {
-			postProcessBeforeInitialization((ErrorPageRegistry) bean);
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException { // 初始化前置操作
+		if (bean instanceof ErrorPageRegistry) { // 当前初始化的对象为ErrorPageRegistry类型时，遍历所有ErrorPageRegistrar并调用registerErrorPages方法对ErrorPageRegistry进行自定义操作
+			postProcessBeforeInitialization((ErrorPageRegistry) bean); // 初始化前置操作
 		}
 		return bean;
 	}
@@ -63,19 +63,19 @@ public class ErrorPageRegistrarBeanPostProcessor implements BeanPostProcessor, B
 		return bean;
 	}
 
-	private void postProcessBeforeInitialization(ErrorPageRegistry registry) {
-		for (ErrorPageRegistrar registrar : getRegistrars()) {
+	private void postProcessBeforeInitialization(ErrorPageRegistry registry) { // 初始化前置操作
+		for (ErrorPageRegistrar registrar : getRegistrars()) { // 获取所有ErrorPageRegistrar，并进行遍历，调用其registerErrorPages方法
 			registrar.registerErrorPages(registry);
 		}
 	}
 
-	private Collection<ErrorPageRegistrar> getRegistrars() {
+	private Collection<ErrorPageRegistrar> getRegistrars() { // 获取所有ErrorPageRegistrar
 		if (this.registrars == null) {
 			// Look up does not include the parent context
 			this.registrars = new ArrayList<>(
-					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values());
-			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE);
-			this.registrars = Collections.unmodifiableList(this.registrars);
+					this.beanFactory.getBeansOfType(ErrorPageRegistrar.class, false, false).values()); // 从容器中获取所有ErrorPageRegistrar
+			this.registrars.sort(AnnotationAwareOrderComparator.INSTANCE); // 排序
+			this.registrars = Collections.unmodifiableList(this.registrars); // 封装成不可变集合
 		}
 		return this.registrars;
 	}

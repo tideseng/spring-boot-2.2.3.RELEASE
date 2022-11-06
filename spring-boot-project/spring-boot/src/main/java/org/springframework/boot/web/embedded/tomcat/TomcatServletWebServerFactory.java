@@ -98,7 +98,7 @@ import org.springframework.util.StringUtils;
  * @see #setContextLifecycleListeners(Collection)
  * @see TomcatWebServer
  */
-public class TomcatServletWebServerFactory extends AbstractServletWebServerFactory
+public class TomcatServletWebServerFactory extends AbstractServletWebServerFactory // Tomcat工厂
 		implements ConfigurableTomcatWebServerFactory, ResourceLoaderAware {
 
 	private static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
@@ -141,7 +141,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	/**
 	 * Create a new {@link TomcatServletWebServerFactory} instance.
 	 */
-	public TomcatServletWebServerFactory() {
+	public TomcatServletWebServerFactory() { // 实例化TomcatServletWebServerFactory
 	}
 
 	/**
@@ -170,11 +170,11 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	}
 
 	@Override
-	public WebServer getWebServer(ServletContextInitializer... initializers) {
+	public WebServer getWebServer(ServletContextInitializer... initializers) { // 获取Tomcat Web服务（通过onRefresh方法调用）
 		if (this.disableMBeanRegistry) {
 			Registry.disableRegistry();
 		}
-		Tomcat tomcat = new Tomcat();
+		Tomcat tomcat = new Tomcat(); // 创建Tomcat，设置相关属性
 		File baseDir = (this.baseDirectory != null) ? this.baseDirectory : createTempDir("tomcat");
 		tomcat.setBaseDir(baseDir.getAbsolutePath());
 		Connector connector = new Connector(this.protocol);
@@ -188,7 +188,7 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 			tomcat.getService().addConnector(additionalConnector);
 		}
 		prepareContext(tomcat.getHost(), initializers);
-		return getTomcatWebServer(tomcat);
+		return getTomcatWebServer(tomcat); // 获取TomcatWebServer（会启动Tomcat）
 	}
 
 	private void configureEngine(Engine engine) {
@@ -434,8 +434,8 @@ public class TomcatServletWebServerFactory extends AbstractServletWebServerFacto
 	 * @param tomcat the Tomcat server.
 	 * @return a new {@link TomcatWebServer} instance
 	 */
-	protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
-		return new TomcatWebServer(tomcat, getPort() >= 0);
+	protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) { // 获取TomcatWebServer
+		return new TomcatWebServer(tomcat, getPort() >= 0); // 创建TomcatWebServer
 	}
 
 	@Override

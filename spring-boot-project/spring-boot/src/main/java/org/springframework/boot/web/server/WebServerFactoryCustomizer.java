@@ -37,7 +37,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * @see WebServerFactoryCustomizerBeanPostProcessor
  */
 @FunctionalInterface
-public interface WebServerFactoryCustomizer<T extends WebServerFactory> {
+public interface WebServerFactoryCustomizer<T extends WebServerFactory> { // 自定义WebServerFactory接口类，有Tomcat、Servlet、TomcatServlet、TomcatWebSocket、LocaleCharsetMappingsCustomizer
 
 	/**
 	 * Customize the specified {@link WebServerFactory}.

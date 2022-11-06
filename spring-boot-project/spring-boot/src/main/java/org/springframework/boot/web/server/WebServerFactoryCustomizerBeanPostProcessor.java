@@ -39,11 +39,11 @@ import org.springframework.util.Assert;
  * @author Stephane Nicoll
  * @since 2.0.0
  */
-public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware {
+public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProcessor, BeanFactoryAware { // 在ServletWebServerFactoryAutoConfiguration.BeanPostProcessorsRegistrar中进行注册
 
 	private ListableBeanFactory beanFactory;
 
-	private List<WebServerFactoryCustomizer<?>> customizers;
+	private List<WebServerFactoryCustomizer<?>> customizers; // 容器中的所有WebServerFactoryCustomizer集合
 
 	@Override
 	public void setBeanFactory(BeanFactory beanFactory) {
@@ -53,9 +53,9 @@ public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProc
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
-		if (bean instanceof WebServerFactory) {
-			postProcessBeforeInitialization((WebServerFactory) bean);
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException { // 初始化前置操作
+		if (bean instanceof WebServerFactory) { // 当前初始化的对象为WebServerFactory类型时，遍历所有WebServerFactoryCustomizer并调用customize方法对WebServerFactory进行自定义操作
+			postProcessBeforeInitialization((WebServerFactory) bean); // 初始化前置操作
 		}
 		return bean;
 	}
@@ -66,24 +66,24 @@ public class WebServerFactoryCustomizerBeanPostProcessor implements BeanPostProc
 	}
 
 	@SuppressWarnings("unchecked")
-	private void postProcessBeforeInitialization(WebServerFactory webServerFactory) {
-		LambdaSafe.callbacks(WebServerFactoryCustomizer.class, getCustomizers(), webServerFactory)
+	private void postProcessBeforeInitialization(WebServerFactory webServerFactory) { // 初始化前置操作
+		LambdaSafe.callbacks(WebServerFactoryCustomizer.class, getCustomizers(), webServerFactory) // 获取所有WebServerFactoryCustomizer，并进行遍历，调用其customize方法
 				.withLogger(WebServerFactoryCustomizerBeanPostProcessor.class)
-				.invoke((customizer) -> customizer.customize(webServerFactory));
+				.invoke((customizer) -> customizer.customize(webServerFactory)); // 调用WebServerFactoryCustomizer#customize方法
 	}
 
-	private Collection<WebServerFactoryCustomizer<?>> getCustomizers() {
+	private Collection<WebServerFactoryCustomizer<?>> getCustomizers() { // 获取所有WebServerFactoryCustomize
 		if (this.customizers == null) {
 			// Look up does not include the parent context
-			this.customizers = new ArrayList<>(getWebServerFactoryCustomizerBeans());
-			this.customizers.sort(AnnotationAwareOrderComparator.INSTANCE);
-			this.customizers = Collections.unmodifiableList(this.customizers);
+			this.customizers = new ArrayList<>(getWebServerFactoryCustomizerBeans()); // 从容器中获取所有WebServerFactoryCustomize
+			this.customizers.sort(AnnotationAwareOrderComparator.INSTANCE); // 排序
+			this.customizers = Collections.unmodifiableList(this.customizers); // 封装成不可变集合
 		}
 		return this.customizers;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private Collection<WebServerFactoryCustomizer<?>> getWebServerFactoryCustomizerBeans() {
+	private Collection<WebServerFactoryCustomizer<?>> getWebServerFactoryCustomizerBeans() { // 从容器中获取所有WebServerFactoryCustomize
 		return (Collection) this.beanFactory.getBeansOfType(WebServerFactoryCustomizer.class, false, false).values();
 	}
 

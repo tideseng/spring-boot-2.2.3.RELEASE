@@ -147,10 +147,10 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	}
 
 	@Override
-	protected void onRefresh() {
-		super.onRefresh();
+	protected void onRefresh() { // 钩子方法，创建内嵌的web服务（此时Bean还未实例化）
+		super.onRefresh(); // 调用父类方法
 		try {
-			createWebServer();
+			createWebServer(); // 创建内嵌的web服务
 		}
 		catch (Throwable ex) {
 			throw new ApplicationContextException("Unable to start web server", ex);
@@ -158,11 +158,11 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	}
 
 	@Override
-	protected void finishRefresh() {
-		super.finishRefresh();
-		WebServer webServer = startWebServer();
+	protected void finishRefresh() { // 完成刷新过程，发布相应事件（此时Bean已实例化）
+		super.finishRefresh(); // 调用父类方法，发布ContextRefreshedEvent事件
+		WebServer webServer = startWebServer(); // 调用WebServer#start方法
 		if (webServer != null) {
-			publishEvent(new ServletWebServerInitializedEvent(webServer, this));
+			publishEvent(new ServletWebServerInitializedEvent(webServer, this)); // 发布ServletWebServerInitializedEvent事件
 		}
 	}
 
@@ -172,12 +172,12 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		stopAndReleaseWebServer();
 	}
 
-	private void createWebServer() {
+	private void createWebServer() { // 创建内嵌的web服务（onRefresh方法触发）
 		WebServer webServer = this.webServer;
 		ServletContext servletContext = getServletContext();
 		if (webServer == null && servletContext == null) {
-			ServletWebServerFactory factory = getWebServerFactory();
-			this.webServer = factory.getWebServer(getSelfInitializer());
+			ServletWebServerFactory factory = getWebServerFactory(); // 从容器中获取Servlet Web服务工厂类（在ServletWebServerFactoryAutoConfiguration中导入指定）
+			this.webServer = factory.getWebServer(getSelfInitializer()); // 获取Tomcat Web服务
 		}
 		else if (servletContext != null) {
 			try {
@@ -196,9 +196,9 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 	 * the context itself.
 	 * @return a {@link ServletWebServerFactory} (never {@code null})
 	 */
-	protected ServletWebServerFactory getWebServerFactory() {
+	protected ServletWebServerFactory getWebServerFactory() { // 从容器中获取Servlet Web服务工厂类（在ServletWebServerFactoryAutoConfiguration中导入指定）
 		// Use bean names so that we don't consider the hierarchy
-		String[] beanNames = getBeanFactory().getBeanNamesForType(ServletWebServerFactory.class);
+		String[] beanNames = getBeanFactory().getBeanNamesForType(ServletWebServerFactory.class); // 从容器中获取ServletWebServerFactory类型的所有beanName
 		if (beanNames.length == 0) {
 			throw new ApplicationContextException("Unable to start ServletWebServerApplicationContext due to missing "
 					+ "ServletWebServerFactory bean.");
@@ -207,7 +207,7 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 			throw new ApplicationContextException("Unable to start ServletWebServerApplicationContext due to multiple "
 					+ "ServletWebServerFactory beans : " + StringUtils.arrayToCommaDelimitedString(beanNames));
 		}
-		return getBeanFactory().getBean(beanNames[0], ServletWebServerFactory.class);
+		return getBeanFactory().getBean(beanNames[0], ServletWebServerFactory.class); // 当且仅当容器中只有一个Servlet Web服务工厂才不会报错
 	}
 
 	/**
@@ -291,10 +291,10 @@ public class ServletWebServerApplicationContext extends GenericWebApplicationCon
 		}
 	}
 
-	private WebServer startWebServer() {
+	private WebServer startWebServer() { // 调用WebServer#start方法
 		WebServer webServer = this.webServer;
 		if (webServer != null) {
-			webServer.start();
+			webServer.start(); // 调用WebServer#start方法
 		}
 		return webServer;
 	}

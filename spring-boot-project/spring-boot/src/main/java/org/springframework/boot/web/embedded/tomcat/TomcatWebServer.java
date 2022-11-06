@@ -66,7 +66,7 @@ public class TomcatWebServer implements WebServer {
 
 	private final boolean autoStart;
 
-	private volatile boolean started;
+	private volatile boolean started; // 默认为false
 
 	/**
 	 * Create a new {@link TomcatWebServer} instance.
@@ -81,14 +81,14 @@ public class TomcatWebServer implements WebServer {
 	 * @param tomcat the underlying Tomcat server
 	 * @param autoStart if the server should be started
 	 */
-	public TomcatWebServer(Tomcat tomcat, boolean autoStart) {
+	public TomcatWebServer(Tomcat tomcat, boolean autoStart) { // 实例化TomcatWebServer
 		Assert.notNull(tomcat, "Tomcat Server must not be null");
 		this.tomcat = tomcat;
 		this.autoStart = autoStart;
-		initialize();
+		initialize(); // 初始化TomcatWebServer
 	}
 
-	private void initialize() throws WebServerException {
+	private void initialize() throws WebServerException { // 初始化TomcatWebServer
 		logger.info("Tomcat initialized with port(s): " + getPortsDescription(false));
 		synchronized (this.monitor) {
 			try {
@@ -104,7 +104,7 @@ public class TomcatWebServer implements WebServer {
 				});
 
 				// Start the server to trigger initialization listeners
-				this.tomcat.start();
+				this.tomcat.start(); // 启动Tomcat
 
 				// We can re-throw failure exception directly in the main thread
 				rethrowDeferredStartupExceptions();
@@ -190,7 +190,7 @@ public class TomcatWebServer implements WebServer {
 	@Override
 	public void start() throws WebServerException {
 		synchronized (this.monitor) {
-			if (this.started) {
+			if (this.started) { // 首次调用时，默认为false
 				return;
 			}
 			try {

@@ -34,7 +34,7 @@ public class ErrorPage {
 
 	private final String path;
 
-	public ErrorPage(String path) {
+	public ErrorPage(String path) { // 实例化ErrorPage
 		this.status = null;
 		this.exception = null;
 		this.path = path;
