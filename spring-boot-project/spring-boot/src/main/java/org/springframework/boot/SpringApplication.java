@@ -227,11 +227,11 @@ public class SpringApplication {
 
 	private List<ApplicationContextInitializer<?>> initializers; // 应用上下文初始化器
 
-	private List<ApplicationListener<?>> listeners; // 应用事件监听器
+	private List<ApplicationListener<?>> listeners; // 应用事件监听器，在创建运行监听器组合对象SpringApplicationRunListeners会设置到SpringApplicationRunListener的实现类EventPublishingRunListener中
 
-	private Map<String, Object> defaultProperties;
+	private Map<String, Object> defaultProperties; // 默认属性（如果进行了设置，则添加到属性源中）
 
-	private Set<String> additionalProfiles = new HashSet<>();
+	private Set<String> additionalProfiles = new HashSet<>(); // 额外的Profiles
 
 	private boolean allowBeanDefinitionOverriding; // 是否允许同名的BeanDefinition的覆盖，默认为false
 
@@ -454,7 +454,7 @@ public class SpringApplication {
 		}
 		switch (this.webApplicationType) {
 		case SERVLET:
-			return new StandardServletEnvironment(); // Servlet的Environment实例对象
+			return new StandardServletEnvironment(); // Servlet的Environment实例对象，会添加相关的属性源
 		case REACTIVE:
 			return new StandardReactiveWebEnvironment();
 		default:
@@ -478,8 +478,8 @@ public class SpringApplication {
 			ConversionService conversionService = ApplicationConversionService.getSharedInstance(); // 获取ConversionService
 			environment.setConversionService((ConfigurableConversionService) conversionService); // 配置ConversionService到环境的属性解析器中
 		}
-		configurePropertySources(environment, args); // 加载PropertySource
-		configureProfiles(environment, args); // 加载Profile
+		configurePropertySources(environment, args); // 配置PropertySource（defaultProperties、commandLineArgs）
+		configureProfiles(environment, args); // 配置Profile
 	}
 
 	/**
@@ -489,7 +489,7 @@ public class SpringApplication {
 	 * @param args arguments passed to the {@code run} method
 	 * @see #configureEnvironment(ConfigurableEnvironment, String[])
 	 */
-	protected void configurePropertySources(ConfigurableEnvironment environment, String[] args) { // 添加属性源
+	protected void configurePropertySources(ConfigurableEnvironment environment, String[] args) { // 配置属性源（defaultProperties、commandLineArgs）
 		MutablePropertySources sources = environment.getPropertySources();
 		if (this.defaultProperties != null && !this.defaultProperties.isEmpty()) {
 			sources.addLast(new MapPropertySource("defaultProperties", this.defaultProperties));
@@ -519,9 +519,9 @@ public class SpringApplication {
 	 * @see #configureEnvironment(ConfigurableEnvironment, String[])
 	 * @see org.springframework.boot.context.config.ConfigFileApplicationListener
 	 */
-	protected void configureProfiles(ConfigurableEnvironment environment, String[] args) {
+	protected void configureProfiles(ConfigurableEnvironment environment, String[] args) { // 配置当前激活的Profile
 		Set<String> profiles = new LinkedHashSet<>(this.additionalProfiles);
-		profiles.addAll(Arrays.asList(environment.getActiveProfiles())); // 加载指定的spring.profiles.active属性并合并到额外的Profiles
+		profiles.addAll(Arrays.asList(environment.getActiveProfiles())); // 添加激活的Profile（spring.profiles.active属性）并合并到额外的Profiles
 		environment.setActiveProfiles(StringUtils.toStringArray(profiles)); // 重置Profiles
 	}
 
@@ -619,7 +619,7 @@ public class SpringApplication {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void applyInitializers(ConfigurableApplicationContext context) { // 调用应用上下文初始化器的初始化initialize方法
-		for (ApplicationContextInitializer initializer : getInitializers()) {
+		for (ApplicationContextInitializer initializer : getInitializers()) { // 获取应用上下文初始化器并进行遍历
 			Class<?> requiredType = GenericTypeResolver.resolveTypeArgument(initializer.getClass(),
 					ApplicationContextInitializer.class);
 			Assert.isInstanceOf(requiredType, context, "Unable to call initializer.");
