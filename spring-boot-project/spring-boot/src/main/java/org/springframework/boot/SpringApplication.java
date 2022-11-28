@@ -327,7 +327,7 @@ public class SpringApplication {
 		}
 
 		try {
-			listeners.running(context); // 10.发布running通知/ApplicationReadyEvent事件
+			listeners.running(context); // 10.发布running通知/ApplicationReadyEvent事件（Ribbon子容器饥饿配置时的初始化入口，见RibbonApplicationContextInitializer）
 		}
 		catch (Throwable ex) {
 			handleRunFailure(context, ex, exceptionReporters, null);
@@ -623,7 +623,7 @@ public class SpringApplication {
 			Class<?> requiredType = GenericTypeResolver.resolveTypeArgument(initializer.getClass(),
 					ApplicationContextInitializer.class);
 			Assert.isInstanceOf(requiredType, context, "Unable to call initializer.");
-			initializer.initialize(context); // 调用上下文初始化器的初始化ApplicationContextInitializer.initialize方法
+			initializer.initialize(context); // 调用AncestorInitializer设置父容器为Bootstrap、调用PropertySourceBootstrapConfiguration添加bootstrapProperties属性源
 		}
 	}
 
@@ -1163,7 +1163,7 @@ public class SpringApplication {
 	 * {@link ApplicationContext}.
 	 * @param initializers the initializers to add
 	 */
-	public void addInitializers(ApplicationContextInitializer<?>... initializers) {
+	public void addInitializers(ApplicationContextInitializer<?>... initializers) { // 添加应用上下文初始化器（BootstrapApplicationListener等类进行了添加）
 		this.initializers.addAll(Arrays.asList(initializers));
 	}
 
@@ -1190,7 +1190,7 @@ public class SpringApplication {
 	 * registered with the {@link ApplicationContext}.
 	 * @param listeners the listeners to add
 	 */
-	public void addListeners(ApplicationListener<?>... listeners) {
+	public void addListeners(ApplicationListener<?>... listeners) { // 添加应用事件监听器
 		this.listeners.addAll(Arrays.asList(listeners));
 	}
 
