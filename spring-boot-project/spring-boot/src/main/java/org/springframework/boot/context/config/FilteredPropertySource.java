@@ -39,8 +39,8 @@ class FilteredPropertySource extends PropertySource<PropertySource<?>> {
 	}
 
 	@Override
-	public Object getProperty(String name) {
-		if (this.filteredProperties.contains(name)) {
+	public Object getProperty(String name) { // 获取属性，会先进行过滤
+		if (this.filteredProperties.contains(name)) { // 如果为要过滤的属性，则进行过滤、返回null
 			return null;
 		}
 		return getSource().getProperty(name);
@@ -49,17 +49,17 @@ class FilteredPropertySource extends PropertySource<PropertySource<?>> {
 	static void apply(ConfigurableEnvironment environment, String propertySourceName, Set<String> filteredProperties, // propertySourceName值为defaultProperties
 			Consumer<PropertySource<?>> operation) {
 		MutablePropertySources propertySources = environment.getPropertySources();
-		PropertySource<?> original = propertySources.get(propertySourceName); // 获取Environment中已经设置的PropertySource
-		if (original == null) {
+		PropertySource<?> original = propertySources.get(propertySourceName); // 获取Environment中已经设置的defaultProperties默认属性源
+		if (original == null) { // 如果没有配置默认属性源
 			operation.accept(null); // 函数式接口回调，详见ConfigFileApplicationListener.Loader#load()
 			return;
 		}
-		propertySources.replace(propertySourceName, new FilteredPropertySource(original, filteredProperties));
+		propertySources.replace(propertySourceName, new FilteredPropertySource(original, filteredProperties)); // 如果配置了默认属性源，则添加过滤属性
 		try {
-			operation.accept(original);
+			operation.accept(original); // 函数式接口回调，详见ConfigFileApplicationListener.Loader#load()
 		}
 		finally {
-			propertySources.replace(propertySourceName, original);
+			propertySources.replace(propertySourceName, original); // 还原默认属性源
 		}
 	}
 
