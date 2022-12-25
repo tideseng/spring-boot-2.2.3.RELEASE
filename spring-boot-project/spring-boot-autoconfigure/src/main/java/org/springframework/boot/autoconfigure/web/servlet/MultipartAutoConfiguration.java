@@ -68,10 +68,10 @@ public class MultipartAutoConfiguration {
 		return this.multipartProperties.createMultipartConfig();
 	}
 
-	@Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME)
+	@Bean(name = DispatcherServlet.MULTIPART_RESOLVER_BEAN_NAME) // 指定beanName
 	@ConditionalOnMissingBean(MultipartResolver.class)
 	public StandardServletMultipartResolver multipartResolver() {
-		StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver();
+		StandardServletMultipartResolver multipartResolver = new StandardServletMultipartResolver(); // 创建StandardServletMultipartResolver
 		multipartResolver.setResolveLazily(this.multipartProperties.isResolveLazily());
 		return multipartResolver;
 	}

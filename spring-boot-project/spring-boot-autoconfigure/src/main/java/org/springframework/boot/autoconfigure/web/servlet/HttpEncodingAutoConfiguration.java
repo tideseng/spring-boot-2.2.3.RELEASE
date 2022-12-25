@@ -49,7 +49,7 @@ public class HttpEncodingAutoConfiguration {
 
 	private final HttpProperties.Encoding properties;
 
-	public HttpEncodingAutoConfiguration(HttpProperties properties) {
+	public HttpEncodingAutoConfiguration(HttpProperties properties) { // 自动注入Http属性对象
 		this.properties = properties.getEncoding();
 	}
 
@@ -65,7 +65,7 @@ public class HttpEncodingAutoConfiguration {
 
 	@Bean
 	public LocaleCharsetMappingsCustomizer localeCharsetMappingsCustomizer() {
-		return new LocaleCharsetMappingsCustomizer(this.properties);
+		return new LocaleCharsetMappingsCustomizer(this.properties); // 创建LocaleCharsetMappingsCustomizer（WebServerFactoryCustomizer实现类）
 	}
 
 	private static class LocaleCharsetMappingsCustomizer
@@ -78,7 +78,7 @@ public class HttpEncodingAutoConfiguration {
 		}
 
 		@Override
-		public void customize(ConfigurableServletWebServerFactory factory) {
+		public void customize(ConfigurableServletWebServerFactory factory) { // 设置Tomcat工厂的Http编码映射
 			if (this.properties.getMapping() != null) {
 				factory.setLocaleCharsetMappings(this.properties.getMapping());
 			}

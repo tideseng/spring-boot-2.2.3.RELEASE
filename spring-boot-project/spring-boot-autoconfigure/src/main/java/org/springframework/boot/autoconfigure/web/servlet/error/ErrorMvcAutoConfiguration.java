@@ -113,7 +113,7 @@ public class ErrorMvcAutoConfiguration {
 
 	@Bean
 	public ErrorPageCustomizer errorPageCustomizer(DispatcherServletPath dispatcherServletPath) {
-		return new ErrorPageCustomizer(this.serverProperties, dispatcherServletPath);
+		return new ErrorPageCustomizer(this.serverProperties, dispatcherServletPath); // 创建ErrorPageCustomizer
 	}
 
 	@Bean
@@ -252,22 +252,22 @@ public class ErrorMvcAutoConfiguration {
 	/**
 	 * {@link WebServerFactoryCustomizer} that configures the server's error pages.
 	 */
-	private static class ErrorPageCustomizer implements ErrorPageRegistrar, Ordered {
+	private static class ErrorPageCustomizer implements ErrorPageRegistrar, Ordered { // ErrorPageRegistrar默认的实现类（在ErrorMvcAutoConfiguration中进行定义）
 
 		private final ServerProperties properties;
 
 		private final DispatcherServletPath dispatcherServletPath;
 
-		protected ErrorPageCustomizer(ServerProperties properties, DispatcherServletPath dispatcherServletPath) {
+		protected ErrorPageCustomizer(ServerProperties properties, DispatcherServletPath dispatcherServletPath) { // 实例化ErrorPageCustomizer（需要先创建DispatcherServlet）
 			this.properties = properties;
 			this.dispatcherServletPath = dispatcherServletPath;
 		}
 
 		@Override
-		public void registerErrorPages(ErrorPageRegistry errorPageRegistry) {
-			ErrorPage errorPage = new ErrorPage(
-					this.dispatcherServletPath.getRelativePath(this.properties.getError().getPath()));
-			errorPageRegistry.addErrorPages(errorPage);
+		public void registerErrorPages(ErrorPageRegistry errorPageRegistry) { // 注册错误页面
+			ErrorPage errorPage = new ErrorPage( // 创建ErrorPage
+					this.dispatcherServletPath.getRelativePath(this.properties.getError().getPath())); // path默认为"/error"
+			errorPageRegistry.addErrorPages(errorPage); // 将ErrorPage设置到Tomcat工厂属性中
 		}
 
 		@Override
