@@ -82,11 +82,11 @@ class ConfigurationPropertiesBinder {
 		this.jsr303Present = ConfigurationPropertiesJsr303Validator.isJsr303Present(applicationContext);
 	}
 
-	BindResult<?> bind(ConfigurationPropertiesBean propertiesBean) {
+	BindResult<?> bind(ConfigurationPropertiesBean propertiesBean) { // 数据绑定，通过相应的转换器类型进行数据绑定
 		Bindable<?> target = propertiesBean.asBindTarget();
 		ConfigurationProperties annotation = propertiesBean.getAnnotation();
 		BindHandler bindHandler = getBindHandler(target, annotation);
-		return getBinder().bind(annotation.prefix(), target, bindHandler);
+		return getBinder().bind(annotation.prefix(), target, bindHandler); // 数据绑定，通过相应的转换器类型进行数据绑定
 	}
 
 	Object bindOrCreate(ConfigurationPropertiesBean propertiesBean) {

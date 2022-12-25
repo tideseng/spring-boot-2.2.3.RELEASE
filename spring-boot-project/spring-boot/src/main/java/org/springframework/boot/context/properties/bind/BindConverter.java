@@ -84,16 +84,16 @@ final class BindConverter {
 				new ResolvableTypeDescriptor(type, annotations));
 	}
 
-	<T> T convert(Object result, Bindable<T> target) {
-		return convert(result, target.getType(), target.getAnnotations());
+	<T> T convert(Object result, Bindable<T> target) { // 调用转换器转换类型
+		return convert(result, target.getType(), target.getAnnotations()); // 调用转换器转换类型
 	}
 
 	@SuppressWarnings("unchecked")
-	<T> T convert(Object value, ResolvableType type, Annotation... annotations) {
+	<T> T convert(Object value, ResolvableType type, Annotation... annotations) { // 调用转换器转换类型
 		if (value == null) {
 			return null;
 		}
-		return (T) this.conversionService.convert(value, TypeDescriptor.forObject(value),
+		return (T) this.conversionService.convert(value, TypeDescriptor.forObject(value), // 调用转换器转换类型
 				new ResolvableTypeDescriptor(type, annotations));
 	}
 
@@ -156,7 +156,7 @@ final class BindConverter {
 		}
 
 		@Override
-		public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+		public Object convert(Object source, TypeDescriptor sourceType, TypeDescriptor targetType) { // 调用转换器转换类型
 			for (int i = 0; i < this.delegates.size() - 1; i++) {
 				try {
 					ConversionService delegate = this.delegates.get(i);
@@ -167,7 +167,7 @@ final class BindConverter {
 				catch (ConversionException ex) {
 				}
 			}
-			return this.delegates.get(this.delegates.size() - 1).convert(source, sourceType, targetType);
+			return this.delegates.get(this.delegates.size() - 1).convert(source, sourceType, targetType); // 调用转换器转换类型
 		}
 
 	}

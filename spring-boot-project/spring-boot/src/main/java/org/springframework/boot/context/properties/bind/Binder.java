@@ -221,8 +221,8 @@ public class Binder {
 	 * @param <T> the bound type
 	 * @return the binding result (never {@code null})
 	 */
-	public <T> BindResult<T> bind(String name, Bindable<T> target, BindHandler handler) {
-		return bind(ConfigurationPropertyName.of(name), target, handler);
+	public <T> BindResult<T> bind(String name, Bindable<T> target, BindHandler handler) { // 数据绑定，通过相应的转换器类型进行数据绑定
+		return bind(ConfigurationPropertyName.of(name), target, handler); // 数据绑定，通过相应的转换器类型进行数据绑定
 	}
 
 	/**
@@ -234,8 +234,8 @@ public class Binder {
 	 * @param <T> the bound type
 	 * @return the binding result (never {@code null})
 	 */
-	public <T> BindResult<T> bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler) {
-		T bound = bind(name, target, handler, false);
+	public <T> BindResult<T> bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler) { // 数据绑定，通过相应的转换器类型进行数据绑定
+		T bound = bind(name, target, handler, false); // 数据绑定，通过相应的转换器类型进行数据绑定
 		return BindResult.of(bound);
 	}
 
@@ -300,15 +300,15 @@ public class Binder {
 		return bind(name, target, handler, true);
 	}
 
-	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, boolean create) {
+	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, boolean create) { // 数据绑定，通过相应的转换器类型进行数据绑定
 		Assert.notNull(name, "Name must not be null");
 		Assert.notNull(target, "Target must not be null");
 		handler = (handler != null) ? handler : this.defaultBindHandler;
 		Context context = new Context();
-		return bind(name, target, handler, context, false, create);
+		return bind(name, target, handler, context, false, create); // 数据绑定，通过相应的转换器类型进行数据绑定
 	}
 
-	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, Context context,
+	private <T> T bind(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, Context context, // 数据绑定，通过相应的转换器类型进行数据绑定
 			boolean allowRecursiveBinding, boolean create) {
 		context.clearConfigurationProperty();
 		try {
@@ -317,7 +317,7 @@ public class Binder {
 				return handleBindResult(name, target, handler, context, null, create);
 			}
 			target = replacementTarget;
-			Object bound = bindObject(name, target, handler, context, allowRecursiveBinding);
+			Object bound = bindObject(name, target, handler, context, allowRecursiveBinding); // 数据绑定，通过相应的转换器类型进行数据绑定
 			return handleBindResult(name, target, handler, context, bound, create);
 		}
 		catch (Exception ex) {
@@ -365,7 +365,7 @@ public class Binder {
 		}
 	}
 
-	private <T> Object bindObject(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler,
+	private <T> Object bindObject(ConfigurationPropertyName name, Bindable<T> target, BindHandler handler, // 数据绑定，通过相应的转换器类型进行数据绑定
 			Context context, boolean allowRecursiveBinding) {
 		ConfigurationProperty property = findProperty(name, context);
 		if (property == null && containsNoDescendantOf(context.getSources(), name) && context.depth != 0) {
@@ -388,7 +388,7 @@ public class Binder {
 				throw ex;
 			}
 		}
-		return bindDataObject(name, target, handler, context, allowRecursiveBinding);
+		return bindDataObject(name, target, handler, context, allowRecursiveBinding); // 数据绑定，通过相应的转换器类型进行数据绑定
 	}
 
 	private AggregateBinder<?> getAggregateBinder(Bindable<?> target, Context context) {
@@ -436,7 +436,7 @@ public class Binder {
 		return result;
 	}
 
-	private Object bindDataObject(ConfigurationPropertyName name, Bindable<?> target, BindHandler handler,
+	private Object bindDataObject(ConfigurationPropertyName name, Bindable<?> target, BindHandler handler, // 数据绑定，通过相应的转换器类型进行数据绑定
 			Context context, boolean allowRecursiveBinding) {
 		if (isUnbindableBean(name, target, context)) {
 			return null;
@@ -449,7 +449,7 @@ public class Binder {
 				propertyTarget, handler, context, false, false);
 		return context.withDataObject(type, () -> {
 			for (DataObjectBinder dataObjectBinder : this.dataObjectBinders) {
-				Object instance = dataObjectBinder.bind(name, target, context, propertyBinder);
+				Object instance = dataObjectBinder.bind(name, target, context, propertyBinder); // 数据绑定，通过相应的转换器类型进行数据绑定
 				if (instance != null) {
 					return instance;
 				}

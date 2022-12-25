@@ -104,7 +104,7 @@ public class ConfigurationPropertiesBindingPostProcessor
 		Assert.state(bean.getBindMethod() == BindMethod.JAVA_BEAN, "Cannot bind @ConfigurationProperties for bean '"
 				+ bean.getName() + "'. Ensure that @ConstructorBinding has not been applied to regular bean");
 		try {
-			this.binder.bind(bean); // 数据绑定，通过相应的转换器类型进行数据绑定
+			this.binder.bind(bean); // 数据绑定，通过相应的转换器类型进行数据绑定，最终通过GenericConversionService选择匹配的转换器进行数据绑定
 		}
 		catch (Exception ex) {
 			throw new ConfigurationPropertiesBindException(bean, ex);
