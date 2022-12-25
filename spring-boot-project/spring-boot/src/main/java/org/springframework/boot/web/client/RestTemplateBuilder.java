@@ -102,7 +102,7 @@ public class RestTemplateBuilder {
 	 * @param customizers any {@link RestTemplateCustomizer RestTemplateCustomizers} that
 	 * should be applied when the {@link RestTemplate} is built
 	 */
-	public RestTemplateBuilder(RestTemplateCustomizer... customizers) {
+	public RestTemplateBuilder(RestTemplateCustomizer... customizers) { // 初始化RestTemplateBuilder（在RestTemplateAutoConfiguration中自动装配）
 		Assert.notNull(customizers, "Customizers must not be null");
 		this.requestFactoryCustomizer = new RequestFactoryCustomizer();
 		this.detectRequestFactory = true;
@@ -585,7 +585,7 @@ public class RestTemplateBuilder {
 	 * @see #build(Class)
 	 * @see #configure(RestTemplate)
 	 */
-	public RestTemplate build() {
+	public RestTemplate build() { // 构建RestTemplate对象
 		return build(RestTemplate.class);
 	}
 
@@ -611,9 +611,9 @@ public class RestTemplateBuilder {
 	 * @see RestTemplateBuilder#build(Class)
 	 */
 	public <T extends RestTemplate> T configure(T restTemplate) {
-		ClientHttpRequestFactory requestFactory = buildRequestFactory();
+		ClientHttpRequestFactory requestFactory = buildRequestFactory(); // 获取ClientHttpRequestFactory
 		if (requestFactory != null) {
-			restTemplate.setRequestFactory(requestFactory);
+			restTemplate.setRequestFactory(requestFactory); // 设置请求工厂
 		}
 		addClientHttpRequestInitializer(restTemplate);
 		if (!CollectionUtils.isEmpty(this.messageConverters)) {
@@ -643,17 +643,17 @@ public class RestTemplateBuilder {
 	 * @return a {@link ClientHttpRequestFactory} or {@code null}
 	 * @since 2.2.0
 	 */
-	public ClientHttpRequestFactory buildRequestFactory() {
+	public ClientHttpRequestFactory buildRequestFactory() { // 获取ClientHttpRequestFactory
 		ClientHttpRequestFactory requestFactory = null;
 		if (this.requestFactory != null) {
 			requestFactory = this.requestFactory.get();
 		}
-		else if (this.detectRequestFactory) {
-			requestFactory = new ClientHttpRequestFactorySupplier().get();
+		else if (this.detectRequestFactory) { // 默认为true
+			requestFactory = new ClientHttpRequestFactorySupplier().get(); // 通过ClientHttpRequestFactorySupplier获取ClientHttpRequestFactory
 		}
 		if (requestFactory != null) {
 			if (this.requestFactoryCustomizer != null) {
-				this.requestFactoryCustomizer.accept(requestFactory);
+				this.requestFactoryCustomizer.accept(requestFactory); // 设置超时时间
 			}
 		}
 		return requestFactory;

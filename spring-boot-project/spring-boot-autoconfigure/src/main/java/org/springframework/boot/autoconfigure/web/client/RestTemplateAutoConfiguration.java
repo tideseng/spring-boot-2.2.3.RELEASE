@@ -51,14 +51,14 @@ import org.springframework.web.client.RestTemplate;
 @AutoConfigureAfter(HttpMessageConvertersAutoConfiguration.class)
 @ConditionalOnClass(RestTemplate.class)
 @Conditional(NotReactiveWebApplicationCondition.class)
-public class RestTemplateAutoConfiguration {
+public class RestTemplateAutoConfiguration { // spring-boot-autoconfigure依赖包的自动装配类
 
 	@Bean
 	@ConditionalOnMissingBean
 	public RestTemplateBuilder restTemplateBuilder(ObjectProvider<HttpMessageConverters> messageConverters,
 			ObjectProvider<RestTemplateCustomizer> restTemplateCustomizers,
 			ObjectProvider<RestTemplateRequestCustomizer<?>> restTemplateRequestCustomizers) {
-		RestTemplateBuilder builder = new RestTemplateBuilder();
+		RestTemplateBuilder builder = new RestTemplateBuilder(); // 创建RestTemplateBuilder
 		HttpMessageConverters converters = messageConverters.getIfUnique();
 		if (converters != null) {
 			builder = builder.messageConverters(converters.getConverters());

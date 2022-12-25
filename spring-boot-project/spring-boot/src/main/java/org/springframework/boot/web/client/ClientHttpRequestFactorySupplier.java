@@ -33,9 +33,9 @@ import org.springframework.util.ClassUtils;
  * @author Stephane Nicoll
  * @since 2.1.0
  */
-public class ClientHttpRequestFactorySupplier implements Supplier<ClientHttpRequestFactory> {
+public class ClientHttpRequestFactorySupplier implements Supplier<ClientHttpRequestFactory> { // ClientHttpRequestFactory容器
 
-	private static final Map<String, String> REQUEST_FACTORY_CANDIDATES;
+	private static final Map<String, String> REQUEST_FACTORY_CANDIDATES; // 请求工厂容器，默认为：HttpComponentsClientHttpRequestFactory、OkHttp3ClientHttpRequestFactory
 
 	static {
 		Map<String, String> candidates = new LinkedHashMap<>();
@@ -49,12 +49,12 @@ public class ClientHttpRequestFactorySupplier implements Supplier<ClientHttpRequ
 	public ClientHttpRequestFactory get() {
 		for (Map.Entry<String, String> candidate : REQUEST_FACTORY_CANDIDATES.entrySet()) {
 			ClassLoader classLoader = getClass().getClassLoader();
-			if (ClassUtils.isPresent(candidate.getKey(), classLoader)) {
+			if (ClassUtils.isPresent(candidate.getKey(), classLoader)) { // 按顺序遍历请求工厂容器，如果当前Class类存在，则进行反射实例化
 				Class<?> factoryClass = ClassUtils.resolveClassName(candidate.getValue(), classLoader);
 				return (ClientHttpRequestFactory) BeanUtils.instantiateClass(factoryClass);
 			}
 		}
-		return new SimpleClientHttpRequestFactory();
+		return new SimpleClientHttpRequestFactory(); // 默认的工厂容器Class类都不存在时，使用默认的请求工厂类SimpleClientHttpRequestFactory
 	}
 
 }
