@@ -45,7 +45,7 @@ class JavaBeanBinder implements DataObjectBinder {
 	static final JavaBeanBinder INSTANCE = new JavaBeanBinder();
 
 	@Override
-	public <T> T bind(ConfigurationPropertyName name, Bindable<T> target, Context context,
+	public <T> T bind(ConfigurationPropertyName name, Bindable<T> target, Context context, // 数据绑定，通过相应的转换器类型进行数据绑定
 			DataObjectPropertyBinder propertyBinder) {
 		boolean hasKnownBindableProperties = target.getValue() != null && hasKnownBindableProperties(name, context);
 		Bean<T> bean = Bean.get(target, hasKnownBindableProperties);
@@ -53,7 +53,7 @@ class JavaBeanBinder implements DataObjectBinder {
 			return null;
 		}
 		BeanSupplier<T> beanSupplier = bean.getSupplier(target);
-		boolean bound = bind(propertyBinder, bean, beanSupplier);
+		boolean bound = bind(propertyBinder, bean, beanSupplier); // 数据绑定，通过相应的转换器类型进行数据绑定
 		return (bound ? beanSupplier.get() : null);
 	}
 
